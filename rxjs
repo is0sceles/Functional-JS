@@ -1,0 +1,5545 @@
+
+
+This is an interactive learning course with exercises you fill out right in the browser. If you just want to browse the content click the button below:
+Functional Programming in Javascript
+
+This is a series of interactive exercises for learning Microsoft's Reactive Extensions (Rx) Library for Javascript. So why is the title "Functional Programming in Javascript"? Well it turns out that the key to learning Rx is training yourself to use functional programming to manipulate collections. Functional programming provides developers with the tools to abstract common collection operations into reusable, composable building blocks. You'll be surprised to learn that most of the operations you perform on collections can be accomplished with five simple functions (some native to JavaScript and some included in the RxJS library):
+
+    map
+    filter
+    concatAll
+    reduce
+    zip
+
+Here's my promise to you: if you learn these 5 functions your code will become shorter, more self-descriptive, and more durable. Also, for reasons that might not be obvious right now, you'll learn that these five functions hold the key to simplifying asynchronous programming. Once you've finished this tutorial you'll also have all the tools you need to easily avoid race conditions, propagate and handle asynchronous errors, and sequence events and AJAX requests. In short, these 5 functions will probably be the most powerful, flexible, and useful functions you'll ever learn.
+Finishing the Interactive Exercises
+
+This isn't just a tutorial, it's a series of interactive exercises that you can fill out right in your browser! It's easy to finish the exercises. Just edit the code and press "Run." If the code works, a new exercise will appear below. Otherwise an error will appear.
+
+Note: Use the "F4" key to toggle full screen mode for each editor.
+
+This tutorial may have bugs, so if you get into a weird state or you're sure you've got the right answer but can't move on, just refresh your browser. If you're using a modern browser, and if you're here I assume you are, the state of your exercises will be saved. If you want, you can also restart the lab.
+
+This tutorial is on GitHub, and is asymptotically approaching completion. If you'd like to add an exercise, clarify a problem description, or fix a bug feel free to fork and send us a pull request. We'll try and fit user-contributed exercises into a narrative.
+
+Your answers will be saved in local storage. Use the buttons below if you want to transfer them to another machine:
+Working with Arrays
+
+The Array is Javascript's only collection type. Arrays are everywhere. We're going to add the five functions to the Array type, and in the process make it much more powerful and useful. As a matter of fact, Array already has the map, filter, and reduce functions! However we're going to reimplement these functions as a learning exercise.
+
+This section will follow a pattern. First we'll solve problems the way you probably learned in school, or on your own by reading other people's code. In other words, we'll transform collections into new collections using loops and statements. Then we'll implement one of the five functions, and then use it to solve the same problem again without the loop. Once we've learned the five functions, you'll learn how to combine them to solve complex problems with very little code.
+Traversing an Array
+Exercise 1: Print all the names in an array
+1
+
+function(console) {
+
+2
+
+  var names = ["Ben", "Jafar", "Matt", "Priya", "Brian"],
+
+3
+
+    counter;
+
+4
+
+​
+
+5
+
+  for(counter = 0; counter < names.length; counter++) {
+
+6
+
+    console.log(names[counter]);
+
+7
+
+  }
+
+8
+
+}
+
+9
+
+    
+
+<- Click here to try your solution. If it works, you'll move on to the next exercise.
+
+Ask yourself this question: did we need to specify the order in which the names were printed? If not, why do it?
+Exercise 2: Use forEach to print all the names in an array
+
+Let's repeat the previous exercise using the forEach function.
+1
+
+function(console) {
+
+2
+
+  var names = ["Ben", "Jafar", "Matt", "Priya", "Brian"];
+
+3
+
+​
+
+4
+
+  names.forEach(function(name) {
+
+5
+
+    console.log(name);
+
+6
+
+  });
+
+7
+
+}
+
+8
+
+    
+
+Notice that forEach lets us specify what we want to happen to each item in the array, but hides how the array is traversed.
+Projecting Arrays
+
+Applying a function to a value and creating a new value is called a projection. To project one array into another, we apply a projection function to each item in the array and collect the results in a new array.
+Exercise 3: Project an array of videos into an array of {id,title} pairs using forEach()
+
+For each video, add a projected {id, title} pair to the videoAndTitlePairs array.
+1
+
+function() {
+
+2
+
+  var newReleases = [
+
+3
+
+      {
+
+4
+
+        "id": 70111470,
+
+5
+
+        "title": "Die Hard",
+
+6
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
+
+7
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+8
+
+        "rating": [4.0],
+
+9
+
+        "bookmark": []
+
+10
+
+      },
+
+11
+
+      {
+
+12
+
+        "id": 654356453,
+
+13
+
+        "title": "Bad Boys",
+
+14
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
+
+15
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+16
+
+        "rating": [5.0],
+
+17
+
+        "bookmark": [{ id:432534, time:65876586 }]
+
+18
+
+      },
+
+19
+
+      {
+
+20
+
+        "id": 65432445,
+
+21
+
+        "title": "The Chamber",
+
+22
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
+
+23
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+24
+
+        "rating": [4.0],
+
+25
+
+        "bookmark": []
+
+26
+
+      },
+
+27
+
+      {
+
+28
+
+        "id": 675465,
+
+29
+
+        "title": "Fracture",
+
+30
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
+
+31
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+32
+
+        "rating": [5.0],
+
+33
+
+        "bookmark": [{ id:432534, time:65876586 }]
+
+34
+
+      }
+
+35
+
+    ],
+
+36
+
+    videoAndTitlePairs = [];
+
+37
+
+  newReleases.forEach(function(obj){ videoAndTitlePairs.push({id:obj.id, title:obj.title})  });
+
+38
+
+    
+
+39
+
+    
+
+40
+
+  return videoAndTitlePairs;
+
+41
+
+}
+
+All array projections share two operations in common:
+
+    Traverse the source array
+    Add each item's projected value to a new array
+
+Why not abstract away how these operations are carried out?
+Exercise 4: Implement map()
+
+To make projections easier, let's add a map() function to the Array type. Map accepts the projection function to be applied to each item in the source array, and returns the projected array.
+1
+
+Array.prototype.map = function(projectionFunction) {
+
+2
+
+  var results = [];
+
+3
+
+  this.forEach(function(itemInArray) {
+
+4
+
+​
+
+5
+
+    // ------------ INSERT CODE HERE! ----------------------------
+
+6
+
+    // Apply the projectionFunction to each item in the array and add
+
+7
+
+    // each result to the results array.
+
+8
+
+    // Note: you can add items to an array with the push() method.
+
+9
+
+    // ------------ INSERT CODE HERE! ----------------------------
+
+10
+
+​
+
+11
+
+    results.push(itemInArray+1);
+
+12
+
+    
+
+13
+
+    
+
+14
+
+  });
+
+15
+
+​
+
+16
+
+  return results;
+
+17
+
+};
+
+18
+
+​
+
+19
+
+// JSON.stringify([1,2,3].map(function(x) { return x + 1; })) === '[2,3,4]'
+
+20
+
+    
+
+Exercise 5: Use map() to project an array of videos into an array of {id,title} pairs
+
+Let's repeat the exercise of collecting {id, title} pairs for each video in the newReleases array, but this time we'll use our map function.
+1
+
+function() {
+
+2
+
+  var newReleases = [
+
+3
+
+      {
+
+4
+
+        "id": 70111470,
+
+5
+
+        "title": "Die Hard",
+
+6
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
+
+7
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+8
+
+        "rating": [4.0],
+
+9
+
+        "bookmark": []
+
+10
+
+      },
+
+11
+
+      {
+
+12
+
+        "id": 654356453,
+
+13
+
+        "title": "Bad Boys",
+
+14
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
+
+15
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+16
+
+        "rating": [5.0],
+
+17
+
+        "bookmark": [{ id:432534, time:65876586 }]
+
+18
+
+      },
+
+19
+
+      {
+
+20
+
+        "id": 65432445,
+
+21
+
+        "title": "The Chamber",
+
+22
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
+
+23
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+24
+
+        "rating": [4.0],
+
+25
+
+        "bookmark": []
+
+26
+
+      },
+
+27
+
+      {
+
+28
+
+        "id": 675465,
+
+29
+
+        "title": "Fracture",
+
+30
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
+
+31
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+32
+
+        "rating": [5.0],
+
+33
+
+        "bookmark": [{ id:432534, time:65876586 }]
+
+34
+
+      }
+
+35
+
+    ];
+
+36
+
+​
+
+37
+
+  return newReleases.map(function(video) { return {id: video.id, title: video.title}; });
+
+38
+
+}
+
+39
+
+    
+
+Notice that map allows us to specify what projection we want to apply to an array, but hides how the operation is carried out.
+Filtering Arrays
+
+Like projection, filtering an array is also a very common operation. To filter an array we apply a test to each item in the array and collect the items that pass into a new array.
+Exercise 6: Use forEach() to collect only those videos with a rating of 5.0
+
+Use forEach() to loop through the videos in the newReleases array and, if a video has a rating of 5.0, add it to the videos array.
+1
+
+function() {
+
+2
+
+  var newReleases = [
+
+3
+
+    {
+
+4
+
+      "id": 70111470,
+
+5
+
+      "title": "Die Hard",
+
+6
+
+      "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
+
+7
+
+      "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+8
+
+      "rating": 4.0,
+
+9
+
+      "bookmark": []
+
+10
+
+    },
+
+11
+
+    {
+
+12
+
+      "id": 654356453,
+
+13
+
+      "title": "Bad Boys",
+
+14
+
+      "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
+
+15
+
+      "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+16
+
+      "rating": 5.0,
+
+17
+
+      "bookmark": [{ id:432534, time:65876586 }]
+
+18
+
+    },
+
+19
+
+    {
+
+20
+
+      "id": 65432445,
+
+21
+
+      "title": "The Chamber",
+
+22
+
+      "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
+
+23
+
+      "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+24
+
+      "rating": 4.0,
+
+25
+
+      "bookmark": []
+
+26
+
+    },
+
+27
+
+    {
+
+28
+
+      "id": 675465,
+
+29
+
+      "title": "Fracture",
+
+30
+
+      "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
+
+31
+
+      "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+32
+
+      "rating": 5.0,
+
+33
+
+      "bookmark": [{ id:432534, time:65876586 }]
+
+34
+
+    }
+
+35
+
+  ],
+
+36
+
+  videos = [];
+
+37
+
+​
+
+38
+
+  // ------------ INSERT CODE HERE! -----------------------------------
+
+39
+
+  // Use forEach function to accumulate every video with a rating of 5.0
+
+40
+
+  // ------------ INSERT CODE HERE! -----------------------------------
+
+41
+
+​
+
+Notice that, like map(), every filter() operation shares some operations in common:
+
+    Traverse the array
+    Add objects that pass the test to a new array
+
+Why not abstract away how these operations are carried out?
+Exercise 7: Implement filter()
+
+To make filtering easier, let's add a filter() function to the Array type. The filter() function accepts a predicate. A predicate is a function that accepts an item in the array, and returns a boolean indicating whether the item should be retained in the new array.
+1
+
+Array.prototype.filter = function(predicateFunction) {
+
+2
+
+  var results = [];
+
+3
+
+  this.forEach(function(itemInArray) {
+
+4
+
+    if(itemInArray > 2){
+
+5
+
+    results.push(itemInArray);
+
+6
+
+    }
+
+7
+
+    // ------------ INSERT CODE HERE! ----------------------------
+
+8
+
+    // Apply the predicateFunction to each item in the array.
+
+9
+
+    // If the result is truthy, add the item to the results array.
+
+10
+
+    // Note: remember you can add items to the array using the array's
+
+11
+
+    // push() method.
+
+12
+
+    // ------------ INSERT CODE HERE! ----------------------------
+
+13
+
+  });
+
+14
+
+​
+
+15
+
+  return results;
+
+16
+
+};
+
+17
+
+​
+
+18
+
+// JSON.stringify([1,2,3].filter(function(x) { return x > 2})) === "[3]"
+
+19
+
+    
+
+Like map(), filter() lets us express what data we want without requiring us to specify how we want to collect the data.
+Query Data by Chaining Method Calls
+Exercise 8: Chain filter and map to collect the ids of videos that have a rating of 5.0
+1
+
+function() {
+
+2
+
+  var newReleases = [
+
+3
+
+      {
+
+4
+
+        "id": 70111470,
+
+5
+
+        "title": "Die Hard",
+
+6
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
+
+7
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+8
+
+        "rating": 4.0,
+
+9
+
+        "bookmark": []
+
+10
+
+      },
+
+11
+
+      {
+
+12
+
+        "id": 654356453,
+
+13
+
+        "title": "Bad Boys",
+
+14
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
+
+15
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+16
+
+        "rating": 5.0,
+
+17
+
+        "bookmark": [{ id:432534, time:65876586 }]
+
+18
+
+      },
+
+19
+
+      {
+
+20
+
+        "id": 65432445,
+
+21
+
+        "title": "The Chamber",
+
+22
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
+
+23
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+24
+
+        "rating": 4.0,
+
+25
+
+        "bookmark": []
+
+26
+
+      },
+
+27
+
+      {
+
+28
+
+        "id": 675465,
+
+29
+
+        "title": "Fracture",
+
+30
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
+
+31
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+32
+
+        "rating": 5.0,
+
+33
+
+        "bookmark": [{ id:432534, time:65876586 }]
+
+34
+
+      }
+
+35
+
+    ];
+
+36
+
+​
+
+37
+
+  // ------------   INSERT CODE HERE!  -----------------------------------
+
+38
+
+  // Chain the filter and map functions to select the id of all videos
+
+39
+
+  // with a rating of 5.0.
+
+40
+
+​
+
+41
+
+  return newReleases.
+
+Chaining together map() and filter() gives us a lot of expressive power. These high level functions let us express what data we want, but leave the underlying libraries a great deal of flexibility in terms of how our queries are executed.
+Querying Trees
+
+Sometimes, in addition to flat arrays, we need to query trees. Trees pose a challenge because we need to flatten them into arrays in order to apply filter() and map() operations on them. In this section we'll define a concatAll() function that we can combine with map() and filter() to query trees.
+Exercise 9: Flatten the movieLists array into an array of video ids
+
+Let's start by using two nested forEach loops to collect the id of every video in the two-dimensional movieLists array.
+
+1
+
+function() {
+
+2
+
+  var movieLists = [
+
+3
+
+    {
+
+4
+
+      name: "New Releases",
+
+5
+
+      videos: [
+
+6
+
+        {
+
+7
+
+          "id": 70111470,
+
+8
+
+          "title": "Die Hard",
+
+9
+
+          "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
+
+10
+
+          "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+11
+
+          "rating": 4.0,
+
+12
+
+          "bookmark": []
+
+13
+
+        },
+
+14
+
+        {
+
+15
+
+          "id": 654356453,
+
+16
+
+          "title": "Bad Boys",
+
+17
+
+          "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
+
+18
+
+          "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+19
+
+          "rating": 5.0,
+
+20
+
+          "bookmark": [{ id:432534, time:65876586 }]
+
+21
+
+        }
+
+22
+
+      ]
+
+23
+
+    },
+
+24
+
+    {
+
+25
+
+      name: "Dramas",
+
+26
+
+      videos: [
+
+27
+
+        {
+
+28
+
+          "id": 65432445,
+
+29
+
+          "title": "The Chamber",
+
+30
+
+          "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
+
+31
+
+          "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+32
+
+          "rating": 4.0,
+
+33
+
+          "bookmark": []
+
+34
+
+        },
+
+35
+
+        {
+
+36
+
+          "id": 675465,
+
+37
+
+          "title": "Fracture",
+
+38
+
+          "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
+
+39
+
+          "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+40
+
+          "rating": 5.0,
+
+41
+
+          "bookmark": [{ id:432534, time:65876586 }]
+
+Flattening trees with nested forEach expressions is easy because we can explicitly add items to the array. Unfortunately it's exactly this type of low-level operation that we've been trying to abstract away with functions like map() and filter(). Can we define a function that's abstract enough to express our intent to flatten a tree, without specifying too much information about how to carry out the operation?
+Exercise 10: Implement concatAll()
+
+Let's add a concatAll() function to the Array type. The concatAll() function iterates over each sub-array in the array and collects the results in a new, flat array. Notice that the concatAll() function expects each item in the array to be another array.
+1
+
+Array.prototype.concatAll = function() {
+
+2
+
+  var results = [];
+
+3
+
+  this.forEach(function(subArray) {
+
+4
+
+    results.push.apply(results,subArray);
+
+5
+
+    // ------------ INSERT CODE HERE! ----------------------------
+
+6
+
+    // Add all the items in each subArray to the results array.
+
+7
+
+    // ------------ INSERT CODE HERE! ----------------------------
+
+8
+
+  });
+
+9
+
+​
+
+10
+
+  return results;
+
+11
+
+};
+
+12
+
+​
+
+13
+
+// JSON.stringify([ [1,2,3], [4,5,6], [7,8,9] ].concatAll()) === "[1,2,3,4,5,6,7,8,9]"
+
+14
+
+// [1,2,3].concatAll(); // throws an error because this is a one-dimensional array
+
+15
+
+    
+
+concatAll is a very simple function, so much so that it may not be obvious yet how it can be combined with map() to query a tree. Let's try an example...
+Exercise 11: Use map() and concatAll() to project and flatten the movieLists into an array of video ids
+
+Hint: use two nested calls to map() and one call to concatAll().
+
+1
+
+function() {
+
+2
+
+  var movieLists = [
+
+3
+
+      {
+
+4
+
+        name: "New Releases",
+
+5
+
+        videos: [
+
+6
+
+          {
+
+7
+
+            "id": 70111470,
+
+8
+
+            "title": "Die Hard",
+
+9
+
+            "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
+
+10
+
+            "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+11
+
+            "rating": 4.0,
+
+12
+
+            "bookmark": []
+
+13
+
+          },
+
+14
+
+          {
+
+15
+
+            "id": 654356453,
+
+16
+
+            "title": "Bad Boys",
+
+17
+
+            "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
+
+18
+
+            "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+19
+
+            "rating": 5.0,
+
+20
+
+            "bookmark": [{ id:432534, time:65876586 }]
+
+21
+
+          }
+
+22
+
+        ]
+
+23
+
+      },
+
+24
+
+      {
+
+25
+
+        name: "Dramas",
+
+26
+
+        videos: [
+
+27
+
+          {
+
+28
+
+            "id": 65432445,
+
+29
+
+            "title": "The Chamber",
+
+30
+
+            "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
+
+31
+
+            "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+32
+
+            "rating": 4.0,
+
+33
+
+            "bookmark": []
+
+34
+
+          },
+
+35
+
+          {
+
+36
+
+            "id": 675465,
+
+37
+
+            "title": "Fracture",
+
+38
+
+            "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
+
+39
+
+            "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+40
+
+            "rating": 5.0,
+
+41
+
+            "bookmark": [{ id:432534, time:65876586 }]
+
+Wow! Great work. Mastering the combination of map() and concatAll() is key to effective functional programming. You're half way there! Let's try a more complicated example...
+Exercise 12: Retrieve id, title, and a 150x200 box art url for every video
+
+You've managed to flatten a tree that's two levels deep, let's try for three! Let's say that instead of a single boxart url on each video, we had a collection of boxart objects, each with a different size and url. Create a query that selects {id, title, boxart} for every video in the movieLists. This time though, the boxart property in the result will be the url of the boxart object with dimensions of 150x200px. Let's see if you can solve this problem with map(), concatAll(), and filter().
+
+There's just more one thing: you can't use indexers. In other words, this is illegal:
+
+var itemInArray = movieLists[0];
+			
+
+Furthermore, you're not allowed to use indexers in any of the remaining exercises unless you're implementing one of the five functions. There is a very good reason for this restriction, and that reason will eventually be explained. For now, you'll simply have to accept it on faith that this restriction serves a purpose. :-)
+
+1
+
+function() {
+
+2
+
+  var movieLists = [
+
+3
+
+      {
+
+4
+
+        name: "Instant Queue",
+
+5
+
+        videos : [
+
+6
+
+          {
+
+7
+
+            "id": 70111470,
+
+8
+
+            "title": "Die Hard",
+
+9
+
+            "boxarts": [
+
+10
+
+              { width: 150, height:200, url:"http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" },
+
+11
+
+              { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/DieHard200.jpg" }
+
+12
+
+            ],
+
+13
+
+            "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+14
+
+            "rating": 4.0,
+
+15
+
+            "bookmark": []
+
+16
+
+          },
+
+17
+
+          {
+
+18
+
+            "id": 654356453,
+
+19
+
+            "title": "Bad Boys",
+
+20
+
+            "boxarts": [
+
+21
+
+              { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg" },
+
+22
+
+              { width: 150, height:200, url:"http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg" }
+
+23
+
+​
+
+24
+
+            ],
+
+25
+
+            "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+26
+
+            "rating": 5.0,
+
+27
+
+            "bookmark": [{ id:432534, time:65876586 }]
+
+28
+
+          }
+
+29
+
+        ]
+
+30
+
+      },
+
+31
+
+      {
+
+32
+
+        name: "New Releases",
+
+33
+
+        videos: [
+
+34
+
+          {
+
+35
+
+            "id": 65432445,
+
+36
+
+            "title": "The Chamber",
+
+37
+
+            "boxarts": [
+
+38
+
+              { width: 150, height:200, url:"http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg" },
+
+39
+
+              { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/TheChamber200.jpg" }
+
+40
+
+            ],
+
+41
+
+            "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+Fantastic job! Now you've learned to use concatAll() alongside map() and filter() to queries trees. Notice that map() and concatAll() are very commonly chained together. Let's create a small helper function to help us with this common pattern.
+Exercise 13: Implement concatMap()
+
+Nearly every time we flatten a tree we chain map() and concatAll(). Sometimes, if we're dealing with a tree several levels deep, we'll repeat this combination many times in our code. To save on typing, let's create a concatMap function that's just a map operation, followed by a concatAll.
+1
+
+Array.prototype.concatMap = function(projectionFunctionThatReturnsArray) {
+
+2
+
+  return this.
+
+3
+
+    map(function(item) {
+
+4
+
+      return projectionFunctionThatReturnsArray(item);
+
+5
+
+    }).
+
+6
+
+    // apply the concatAll function to flatten the two-dimensional array
+
+7
+
+    concatAll();
+
+8
+
+};
+
+9
+
+​
+
+10
+
+/*
+
+11
+
+  var spanishFrenchEnglishWords = [ ["cero","rien","zero"], ["uno","un","one"], ["dos","deux","two"] ];
+
+12
+
+  // collect all the words for each number, in every language, in a single, flat list
+
+13
+
+  var allWords = [0,1,2].
+
+14
+
+    concatMap(function(index) {
+
+15
+
+      return spanishFrenchEnglishWords[index];
+
+16
+
+    });
+
+17
+
+​
+
+18
+
+  return JSON.stringify(allWords) === '["cero","rien","zero","uno","un","one","dos","deux","two"]';
+
+19
+
+*/
+
+20
+
+    
+
+Now, instead of using map().concatAll() to flatten a tree, we can just use concatMap helper function.
+Exercise 14: Use concatMap() to retrieve id, title, and 150x200 box art url for every video
+
+Let's repeat the exercise we just performed. However this time we'll simplify the code by replacing the map().concatAll() calls with concatMap().
+
+1
+
+function() {
+
+2
+
+  var movieLists = [
+
+3
+
+      {
+
+4
+
+        name: "Instant Queue",
+
+5
+
+        videos : [
+
+6
+
+          {
+
+7
+
+            "id": 70111470,
+
+8
+
+            "title": "Die Hard",
+
+9
+
+            "boxarts": [
+
+10
+
+              { width: 150, height:200, url:"http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" },
+
+11
+
+              { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/DieHard200.jpg" }
+
+12
+
+            ],
+
+13
+
+            "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+14
+
+            "rating": 4.0,
+
+15
+
+            "bookmark": []
+
+16
+
+          },
+
+17
+
+          {
+
+18
+
+            "id": 654356453,
+
+19
+
+            "title": "Bad Boys",
+
+20
+
+            "boxarts": [
+
+21
+
+              { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg" },
+
+22
+
+              { width: 150, height:200, url:"http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg" }
+
+23
+
+​
+
+24
+
+            ],
+
+25
+
+            "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+26
+
+            "rating": 5.0,
+
+27
+
+            "bookmark": [{ id:432534, time:65876586 }]
+
+28
+
+          }
+
+29
+
+        ]
+
+30
+
+      },
+
+31
+
+      {
+
+32
+
+        name: "New Releases",
+
+33
+
+        videos: [
+
+34
+
+          {
+
+35
+
+            "id": 65432445,
+
+36
+
+            "title": "The Chamber",
+
+37
+
+            "boxarts": [
+
+38
+
+              { width: 150, height:200, url:"http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg" },
+
+39
+
+              { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/TheChamber200.jpg" }
+
+40
+
+            ],
+
+41
+
+            "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+It's a very common pattern to see several nested concatMap operations, with the last operation being a map. You can think of this pattern as the functional version of a nested forEach.
+Reducing Arrays
+
+Sometimes we need to perform an operation on more than one item in the array at the same time. For example, let's say we need to find the largest integer in an array. We can't use a filter() operation, because it only examines one item at a time. To find the largest integer we need to compare items in the array to each other.
+
+One approach could be to select an item in the array as the assumed largest number (perhaps the first item), and then compare that value to every other item in the array. Each time we come across a number that was larger than our assumed largest number, we'd replace it with the larger value, and continue the process until the entire array was traversed.
+
+If we replaced the specific size comparison with a closure, we could write a function that handled the array traversal process for us. At each step our function would apply the closure to the last value and the current value and use the result as the last value the next time. Finally we'd be left with only one value. This process is known as reducing because we reduce many values to a single value.
+Exercise 15: Use forEach to find the largest box art
+
+In this example we use forEach to find the largest box art. Each time we examine a new boxart we update a variable with the currently known maximumSize. If the boxart is smaller than the maximum size, we discard it. If it's larger, we keep track of it. Finally we're left with a single boxart which must necessarily be the largest.
+1
+
+function() {
+
+2
+
+  var boxarts = [
+
+3
+
+      { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture200.jpg" },
+
+4
+
+      { width: 150, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
+
+5
+
+      { width: 300, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" },
+
+6
+
+      { width: 425, height:150, url:"http://cdn-0.nflximg.com/images/2891/Fracture425.jpg" }
+
+7
+
+    ],
+
+8
+
+    currentSize,
+
+9
+
+    maxSize = -1,
+
+10
+
+    largestBoxart;
+
+11
+
+​
+
+12
+
+  boxarts.forEach(function(boxart) {
+
+13
+
+    currentSize = boxart.width * boxart.height;
+
+14
+
+    if (currentSize > maxSize) {
+
+15
+
+      largestBoxart = boxart;
+
+16
+
+      maxSize = currentSize;
+
+17
+
+    }
+
+18
+
+  });
+
+19
+
+​
+
+20
+
+  return largestBoxart;
+
+21
+
+}
+
+22
+
+    
+
+This process is a reduction because we're using the information we derived from the last computation to calculate the current value. However in the example above, we still have to specify the method of traversal. Wouldn't it be nice if we could just specify what operation we wanted to perform on the last and current value? Let's create a helper function to perform reductions on arrays.
+Exercise 16: Implement reduce()
+
+Let's add a reduce() function to the Array type. Like map
+1
+
+// [1,2,3].reduce(function(accumulatedValue, currentValue) { return accumulatedValue + currentValue; }); === [6];
+
+2
+
+// [1,2,3].reduce(function(accumulatedValue, currentValue) { return accumulatedValue + currentValue; }, 10); === [16];
+
+3
+
+​
+
+4
+
+Array.prototype.reduce = function(combiner, initialValue) {
+
+5
+
+  var counter,
+
+6
+
+    accumulatedValue;
+
+7
+
+​
+
+8
+
+  // If the array is empty, do nothing
+
+9
+
+  if (this.length === 0) {
+
+10
+
+    return this;
+
+11
+
+  }
+
+12
+
+  else {
+
+13
+
+    // If the user didn't pass an initial value, use the first item.
+
+14
+
+    if (arguments.length === 1) {
+
+15
+
+      counter = 1;
+
+16
+
+      accumulatedValue = this[0];
+
+17
+
+    }
+
+18
+
+    else if (arguments.length >= 2) {
+
+19
+
+      counter = 0;
+
+20
+
+      accumulatedValue = initialValue;
+
+21
+
+    }
+
+22
+
+    else {
+
+23
+
+      throw "Invalid arguments.";
+
+24
+
+    }
+
+25
+
+​
+
+26
+
+    // Loop through the array, feeding the current value and the result of
+
+27
+
+    // the previous computation back into the combiner function until
+
+28
+
+    // we've exhausted the entire array and are left with only one value.
+
+29
+
+    while(counter < this.length) {
+
+30
+
+      accumulatedValue = combiner(accumulatedValue, this[counter])
+
+31
+
+      counter++;
+
+32
+
+    }
+
+33
+
+​
+
+34
+
+    return [accumulatedValue];
+
+35
+
+  }
+
+36
+
+};
+
+37
+
+    
+
+Exercise 17: Retrieve the largest rating.
+
+Let's use our new reduce function to isolate the largest value in an array of ratings.
+1
+
+function() {
+
+2
+
+  var ratings = [2,3,1,4,5];
+
+3
+
+​
+
+4
+
+  // You should return an array containing only the largest rating. Remember that reduce always
+
+5
+
+  // returns an array with one item.
+
+6
+
+  return ratings.
+
+7
+
+    reduce(function(acc, curr) {
+
+8
+
+    if(acc > curr) {
+
+9
+
+      return acc;
+
+10
+
+    }
+
+11
+
+    else {
+
+12
+
+      return curr;
+
+13
+
+    }
+
+14
+
+    });
+
+15
+
+}
+
+16
+
+    
+
+Nice work. Now let's try combining reduce() with our other functions to build more complex queries.
+Exercise 18: Retrieve url of the largest boxart
+
+Let's try combining reduce() with map() to reduce multiple boxart objects to a single value: the url of the largest box art.
+1
+
+function() {
+
+2
+
+  var boxarts = [
+
+3
+
+      { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture200.jpg" },
+
+4
+
+      { width: 150, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
+
+5
+
+      { width: 300, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" },
+
+6
+
+      { width: 425, height:150, url:"http://cdn-0.nflximg.com/images/2891/Fracture425.jpg" }
+
+7
+
+    ];
+
+8
+
+​
+
+9
+
+  // You should return an array containing only the largest box art. Remember that reduce always
+
+10
+
+  // returns an array with one item.
+
+11
+
+  return boxarts.
+
+12
+
+    reduce(function(memo,curr) {
+
+13
+
+      if (memo.width * memo.height > curr.width * curr.height) {
+
+14
+
+        return memo;
+
+15
+
+     }else {
+
+16
+
+        return curr;
+
+17
+
+      }}).map(function(boxart) {
+
+18
+
+          return boxart.url; });
+
+19
+
+}
+
+20
+
+    
+
+Exercise 19: Reducing with an initial value
+
+Sometimes when we reduce an array, we want the reduced value to be a different type than the items stored in the array. Let's say we have an array of videos and we want to reduce them to a single map where the key is the video id and the value is the video's title.
+
+1
+
+function() {
+
+2
+
+  var videos = [
+
+3
+
+    {
+
+4
+
+      "id": 65432445,
+
+5
+
+      "title": "The Chamber"
+
+6
+
+    },
+
+7
+
+    {
+
+8
+
+      "id": 675465,
+
+9
+
+      "title": "Fracture"
+
+10
+
+    },
+
+11
+
+    {
+
+12
+
+      "id": 70111470,
+
+13
+
+      "title": "Die Hard"
+
+14
+
+    },
+
+15
+
+    {
+
+16
+
+      "id": 654356453,
+
+17
+
+      "title": "Bad Boys"
+
+18
+
+    }
+
+19
+
+  ];
+
+20
+
+​
+
+21
+
+  // Expecting this output...
+
+22
+
+  // [
+
+23
+
+  //     {
+
+24
+
+  //         "65432445": "The Chamber",
+
+25
+
+  //         "675465": "Fracture",
+
+26
+
+  //         "70111470": "Die Hard",
+
+27
+
+  //         "654356453": "Bad Boys"
+
+28
+
+  //     }
+
+29
+
+  // ]
+
+30
+
+  return videos.
+
+31
+
+    reduce(function(accumulatedMap, video) {
+
+32
+
+​
+
+33
+
+      // Object.create() makes a fast copy of the accumulatedMap by
+
+34
+
+      // creating a new object and setting the accumulatedMap to be the
+
+35
+
+      // new object's prototype.
+
+36
+
+      // Initially the new object is empty and has no members of its own,
+
+37
+
+      // except a pointer to the object on which it was based. If an
+
+38
+
+      // attempt to find a member on the new object fails, the new object
+
+39
+
+      // silently attempts to find the member on its prototype. This
+
+40
+
+      // process continues recursively, with each object checking its
+
+41
+
+      // prototype until the member is found or we reach the first object
+
+Nice work. Now let's try combining reduce() with our other functions to build more complex queries.
+Exercise 20: Retrieve the id, title, and smallest box art url for every video.
+
+This is a variation of the problem we solved earlier, where we retrieved the url of the boxart with a width of 150px. This time we'll use reduce() instead of filter() to retrieve the smallest box art in the boxarts array.
+
+28
+
+        }
+
+29
+
+      ]
+
+30
+
+    },
+
+31
+
+    {
+
+32
+
+      name: "Thrillers",
+
+33
+
+      videos: [
+
+34
+
+        {
+
+35
+
+          "id": 65432445,
+
+36
+
+          "title": "The Chamber",
+
+37
+
+          "boxarts": [
+
+38
+
+            { width: 130, height:200, url:"http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg" },
+
+39
+
+            { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/TheChamber200.jpg" }
+
+40
+
+          ],
+
+41
+
+          "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+42
+
+          "rating": 4.0,
+
+43
+
+          "bookmark": []
+
+44
+
+        },
+
+45
+
+        {
+
+46
+
+          "id": 675465,
+
+47
+
+          "title": "Fracture",
+
+48
+
+          "boxarts": [
+
+49
+
+            { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture200.jpg" },
+
+50
+
+            { width: 120, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture120.jpg" },
+
+51
+
+            { width: 300, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" }
+
+52
+
+          ],
+
+53
+
+          "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+54
+
+          "rating": 5.0,
+
+55
+
+          "bookmark": [{ id:432534, time:65876586 }]
+
+56
+
+        }
+
+57
+
+      ]
+
+58
+
+    }
+
+59
+
+  ];
+
+60
+
+​
+
+61
+
+​
+
+62
+
+  // Use one or more concatMap, map, and reduce calls to create an array with the following items (order doesn't matter)
+
+63
+
+  // [
+
+64
+
+  //     {"id": 675465,"title": "Fracture","boxart":"http://cdn-0.nflximg.com/images/2891/Fracture120.jpg" },
+
+65
+
+  //     {"id": 65432445,"title": "The Chamber","boxart":"http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg" },
+
+66
+
+  //     {"id": 654356453,"title": "Bad Boys","boxart":"http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg" },
+
+67
+
+  //     {"id": 70111470,"title": "Die Hard","boxart":"http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" }
+
+68
+
+  // ];
+
+69
+
+​
+
+70
+
+  return movieLists.concatMap(function(movies) {
+
+71
+
+    return movies.videos.concatMap(function(videos) { 
+
+72
+
+      return videos.boxarts.reduce(function(memo,item) {
+
+73
+
+        if (memo.width*memo.height < item.width*item.height) {
+
+74
+
+          return memo;}
+
+75
+
+        else return item;
+
+76
+
+      }).map(function(memoOrItem) { 
+
+77
+
+        return {id:videos.id, title:videos.title, boxart:memoOrItem.url};
+
+78
+
+      }); 
+
+79
+
+    });
+
+80
+
+  });
+
+81
+
+​
+
+82
+
+}
+
+83
+
+    
+
+Zipping Arrays
+
+Sometimes we need to combine two arrays by progressively taking an item from each and combining the pair. If you visualize a zipper, where each side is an array, and each tooth is an item, you'll have a good idea of how the zip operation works.
+Exercise 21: Combine videos and bookmarks by index
+
+Use a for loop to traverse the videos and bookmarks array at the same time. For each video and bookmark pair, create a {videoId, bookmarkId} pair and add it to the videoIdAndBookmarkIdPairs array.
+
+1
+
+function() {
+
+2
+
+  var videos = [
+
+3
+
+      {
+
+4
+
+        "id": 70111470,
+
+5
+
+        "title": "Die Hard",
+
+6
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
+
+7
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+8
+
+        "rating": 4.0,
+
+9
+
+      },
+
+10
+
+      {
+
+11
+
+        "id": 654356453,
+
+12
+
+        "title": "Bad Boys",
+
+13
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
+
+14
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+15
+
+        "rating": 5.0,
+
+16
+
+      },
+
+17
+
+      {
+
+18
+
+        "id": 65432445,
+
+19
+
+        "title": "The Chamber",
+
+20
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
+
+21
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+22
+
+        "rating": 4.0,
+
+23
+
+      },
+
+24
+
+      {
+
+25
+
+        "id": 675465,
+
+26
+
+        "title": "Fracture",
+
+27
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
+
+28
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+29
+
+        "rating": 5.0,
+
+30
+
+      }
+
+31
+
+    ],
+
+32
+
+    bookmarks = [
+
+33
+
+      {id: 470, time: 23432},
+
+34
+
+      {id: 453, time: 234324},
+
+35
+
+      {id: 445, time: 987834}
+
+36
+
+    ],
+
+37
+
+  counter,
+
+38
+
+  videoIdAndBookmarkIdPairs = [];
+
+39
+
+​
+
+40
+
+  for(var counter = 0; counter < Math.min(videos.length, bookmarks.length); counter++) {
+
+41
+
+     var id = {videoId:videos[counter].id, bookmarkId: bookmarks[counter].id};
+
+42
+
+    videoIdAndBookmarkIdPairs.push(id);
+
+43
+
+    
+
+44
+
+    
+
+45
+
+    
+
+46
+
+    
+
+47
+
+    // Insert code here to create a {videoId, bookmarkId} pair and add it to the videoIdAndBookmarkIdPairs array.
+
+48
+
+  }
+
+49
+
+​
+
+50
+
+  return videoIdAndBookmarkIdPairs;
+
+51
+
+}
+
+52
+
+    
+
+Exercise 22: Implement zip
+
+Let's add a static zip() function to the Array type. The zip function accepts a combiner function, traverses each array at the same time, and calls the combiner function on the current item on the left-hand-side and right-hand-side. The zip function requires an item from each array in order to call the combiner function, therefore the array returned by zip will only be as large as the smallest input array.
+
+1
+
+// JSON.stringify(Array.zip([1,2,3],[4,5,6], function(left, right) { return left + right })) === '[5,7,9]'
+
+2
+
+​
+
+3
+
+Array.zip = function(left, right, combinerFunction) {
+
+4
+
+  var counter,
+
+5
+
+    results = [];
+
+6
+
+​
+
+7
+
+  for(counter = 0; counter < Math.min(left.length, right.length); counter++) {
+
+8
+
+    results.push(combinerFunction(left[counter],right[counter]));
+
+9
+
+  }
+
+10
+
+​
+
+11
+
+  return results;
+
+12
+
+};
+
+13
+
+        
+
+Exercise 23: Combine videos and bookmarks by index
+
+Let's repeat exercise 21, but this time lets use your new zip() function. For each video and bookmark pair, create a {videoId, bookmarkId} pair.
+
+1
+
+function() {
+
+2
+
+  var videos = [
+
+3
+
+      {
+
+4
+
+        "id": 70111470,
+
+5
+
+        "title": "Die Hard",
+
+6
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
+
+7
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+8
+
+        "rating": 4.0,
+
+9
+
+      },
+
+10
+
+      {
+
+11
+
+        "id": 654356453,
+
+12
+
+        "title": "Bad Boys",
+
+13
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
+
+14
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+15
+
+        "rating": 5.0,
+
+16
+
+      },
+
+17
+
+      {
+
+18
+
+        "id": 65432445,
+
+19
+
+        "title": "The Chamber",
+
+20
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
+
+21
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+22
+
+        "rating": 4.0,
+
+23
+
+      },
+
+24
+
+      {
+
+25
+
+        "id": 675465,
+
+26
+
+        "title": "Fracture",
+
+27
+
+        "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
+
+28
+
+        "uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+29
+
+        "rating": 5.0,
+
+30
+
+      }
+
+31
+
+    ],
+
+32
+
+    bookmarks = [
+
+33
+
+      {id: 470, time: 23432},
+
+34
+
+      {id: 453, time: 234324},
+
+35
+
+      {id: 445, time: 987834}
+
+36
+
+    ];
+
+37
+
+​
+
+38
+
+  return Array.
+
+39
+
+    zip(videos,bookmarks,function(videos,bookmarks){
+
+40
+
+      return {videoId:videos.id, bookmarkId:bookmarks.id}; 
+
+41
+
+    });
+
+42
+
+}
+
+43
+
+        
+
+Exercise 24: Retrieve each video's id, title, middle interesting moment time, and smallest box art url.
+
+This is a variation of the problem we solved earlier. This time each video has an interesting moments collection, each representing a time during which a screenshot is interesting or representative of the title as a whole. Notice that both the boxarts and interestingMoments arrays are located at the same depth in the tree. Retrieve the time of the middle interesting moment and the smallest box art url simultaneously with zip(). Return an {id, title, time, url} object for each video.
+
+51
+
+            "interestingMoments": [
+
+52
+
+              { type: "End", time:132423 },
+
+53
+
+              { type: "Start", time: 54637425 },
+
+54
+
+              { type: "Middle", time: 3452343}
+
+55
+
+            ]
+
+56
+
+          },
+
+57
+
+          {
+
+58
+
+            "id": 675465,
+
+59
+
+            "title": "Fracture",
+
+60
+
+            "boxarts": [
+
+61
+
+              { width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture200.jpg" },
+
+62
+
+              { width: 120, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture120.jpg" },
+
+63
+
+              { width: 300, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" }
+
+64
+
+            ],
+
+65
+
+            "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+
+66
+
+            "rating": 5.0,
+
+67
+
+            "interestingMoments": [
+
+68
+
+              { type: "End", time:45632456 },
+
+69
+
+              { type: "Start", time: 234534 },
+
+70
+
+              { type: "Middle", time: 3453434}
+
+71
+
+            ]
+
+72
+
+          }
+
+73
+
+        ]
+
+74
+
+      }
+
+75
+
+    ];
+
+76
+
+​
+
+77
+
+  //------------ COMPLETE THIS EXPRESSION --------------
+
+78
+
+  return movieLists.concatMap(function(movs) {
+
+79
+
+        return movs.videos.concatMap(function(vids) {
+
+80
+
+            return Array.zip(vids.boxarts.reduce(function(memo,cur){
+
+81
+
+                if (memo.width*memo.height < cur.width*cur.height) {
+
+82
+
+                    return memo;
+
+83
+
+                } else {return cur; }
+
+84
+
+            }),vids.interestingMoments.filter(function(moments) {
+
+85
+
+                return moments.type === 'Middle';
+
+86
+
+            }),function(memoORcur,moments) { 
+
+87
+
+                return { id: vids.id, title: vids.title, time: moments.time, url: memoORcur.url };
+
+88
+
+            });
+
+89
+
+        });
+
+90
+
+    });
+
+91
+
+}
+
+92
+
+    
+
+Powerful Queries
+
+Now that we've learned the five operators let's flex our muscles and write some powerful queries.
+Exercise 25: Converting from Arrays to Trees
+
+When information is organized in a tree like a JSON expression, relationships point from parent to child. In relational systems like databases, relationships point from children to their parents. Both ways of organizing information are equivalent, and depending on the circumstances, we might get data organized in one way or another. It may surprise you to learn that you can use the 5 query functions you already know to easily convert between these representations. In other words, not only can you query arrays from trees, you can query trees from arrays.
+
+We have 2 arrays each containing lists, and videos respectively. Each video has a listId field indicating its parent list. We want to build an array of list objects, each with a name and a videos array. The videos array will contain the video's id and title. In other words we want to build the following structure:
+
+[
+	{
+		"name": "New Releases",
+		"videos": [
+			{
+				"id": 65432445,
+				"title": "The Chamber"
+			},
+			{
+				"id": 675465,
+				"title": "Fracture"
+			}
+		]
+	},
+	{
+		"name": "Thrillers",
+		"videos": [
+			{
+				"id": 70111470,
+				"title": "Die Hard"
+			},
+			{
+				"id": 654356453,
+				"title": "Bad Boys"
+			}
+		]
+	}
+]
+        
+
+Note: please make sure when creating objects (both lists and videos) that you add properties in the same order as above. This doesn't impact the correctness of your code, but the verifier expects properties to be created in this order.
+
+1
+
+function() {
+
+2
+
+  var lists = [
+
+3
+
+      {
+
+4
+
+        "id": 5434364,
+
+5
+
+        "name": "New Releases"
+
+6
+
+      },
+
+7
+
+      {
+
+8
+
+        "id": 65456475,
+
+9
+
+        name: "Thrillers"
+
+10
+
+      }
+
+11
+
+    ],
+
+12
+
+    videos = [
+
+13
+
+      {
+
+14
+
+        "listId": 5434364,
+
+15
+
+        "id": 65432445,
+
+16
+
+        "title": "The Chamber"
+
+17
+
+      },
+
+18
+
+      {
+
+19
+
+        "listId": 5434364,
+
+20
+
+        "id": 675465,
+
+21
+
+        "title": "Fracture"
+
+22
+
+      },
+
+23
+
+      {
+
+24
+
+        "listId": 65456475,
+
+25
+
+        "id": 70111470,
+
+26
+
+        "title": "Die Hard"
+
+27
+
+      },
+
+28
+
+      {
+
+29
+
+        "listId": 65456475,
+
+30
+
+        "id": 654356453,
+
+31
+
+        "title": "Bad Boys"
+
+32
+
+      }
+
+33
+
+    ];
+
+34
+
+​
+
+35
+
+  return lists.map(function(list){ 
+
+36
+
+    return  {name: list.name, 
+
+37
+
+             videos: videos.filter(function(video){
+
+38
+
+               return video.listId === list.id;
+
+39
+
+               }).
+
+40
+
+             map(function(video){
+
+41
+
+               return {id: video.id, title:video.title};
+
+42
+
+             }) 
+
+43
+
+        }; 
+
+44
+
+  });
+
+45
+
+ 
+
+46
+
+  
+
+47
+
+  
+
+48
+
+  
+
+49
+
+}
+
+50
+
+        
+
+Looks like you figured out that you can use map and filter to join two different arrays by a key. Now let's try a more complex example...
+Exercise 26: Converting from Arrays to Deeper Trees
+
+Let's try creating a deeper tree structure. This time we have 4 separate arrays each containing lists, videos, boxarts, and bookmarks respectively. Each object has a parent id, indicating its parent. We want to build an array of list objects, each with a name and a videos array. The videos array will contain the video's id, title, bookmark time, and smallest boxart url. In other words we want to build the following structure:
+
+[
+	{
+		"name": "New Releases",
+		"videos": [
+			{
+				"id": 65432445,
+				"title": "The Chamber",
+				"time": 32432,
+				"boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg"
+			},
+			{
+				"id": 675465,
+				"title": "Fracture",
+				"time": 3534543,
+				"boxart": "http://cdn-0.nflximg.com/images/2891/Fracture120.jpg"
+			}
+		]
+	},
+	{
+		"name": "Thrillers",
+		"videos": [
+			{
+				"id": 70111470,
+				"title": "Die Hard",
+				"time": 645243,
+				"boxart": "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg"
+			},
+			{
+				"id": 654356453,
+				"title": "Bad Boys",
+				"time": 984934,
+				"boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg"
+			}
+		]
+	}
+]
+        
+
+Note: please make sure when creating objects (both lists and videos) that you add properties in the same order as above. This doesn't impact the correctness of your code, but the verifier expects properties to be created in this order.
+
+39
+
+      { videoId: 675465, width: 300, height:200, url:"http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" },
+
+40
+
+      { videoId: 70111470, width: 150, height:200, url:"http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" },
+
+41
+
+      { videoId: 70111470, width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/DieHard200.jpg" },
+
+42
+
+      { videoId: 654356453, width: 200, height:200, url:"http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg" },
+
+43
+
+      { videoId: 654356453, width: 140, height:200, url:"http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg" }
+
+44
+
+    ],
+
+45
+
+    bookmarks = [
+
+46
+
+      { videoId: 65432445, time: 32432 },
+
+47
+
+      { videoId: 675465, time: 3534543 },
+
+48
+
+      { videoId: 70111470, time: 645243 },
+
+49
+
+      { videoId: 654356453, time: 984934 }
+
+50
+
+    ];
+
+51
+
+​
+
+52
+
+  
+
+53
+
+  return lists.map(function(list){
+
+54
+
+    return {
+
+55
+
+            name: list.name,
+
+56
+
+            videos: 
+
+57
+
+              videos.
+
+58
+
+                filter(function(video){
+
+59
+
+                  return video.listId === list.id; 
+
+60
+
+                }).
+
+61
+
+                concatMap(function(video){ 
+
+62
+
+                   return Array.zip(
+
+63
+
+                     bookmarks.filter(function(bookmark){
+
+64
+
+                       return bookmark.videoId === video.id; 
+
+65
+
+                     }),
+
+66
+
+                     boxarts.filter(function(boxart){ 
+
+67
+
+                       return boxart.videoId === video.id; 
+
+68
+
+                     }).
+
+69
+
+                     reduce(function(acc,cur){
+
+70
+
+                       return acc.width*acc.height < cur.width*cur.height ? acc : cur;
+
+71
+
+                     }),
+
+72
+
+                     function(bookmark,boxart){
+
+73
+
+                       return { id: video.id, title:video.title, time:bookmark.time, boxart: boxart.url }; 
+
+74
+
+                   });   
+
+75
+
+                })
+
+76
+
+              };
+
+77
+
+           });
+
+78
+
+​
+
+79
+
+  
+
+80
+
+}
+
+81
+
+        
+
+Wow! That's a large query, but the code is still small relative to the amount of work it's doing. If we rewrote this query with a series of loops our code would be much less self-describing. Loops don't give the reader any information about the kind of operation being performed. Every time you see a loop, you need to carefully read through the code to find out what's being done. Is it a projection? A filter? A reduction? Why use loops for querying data when we've demonstrated that the 5 functions can be used to create virtually any output we want?
+Exercise 27: Stock Ticker
+
+Let's try an easier question. Let's say we have a collection of all of the prices for NASDAQ stocks over time. Every time the price of a stock changes on the NASDAQ ticker an entry is added to this collection. Let's say that ten days ago you bought shares in Microsoft, and now you want to print all of the MSFT share prices since then. Filter the collection for MSFT trades starting from ten days ago and print each price record (including the time stamp) using the print() function. Note: this is not a trick question. It's as easy as it seems.
+
+// The pricesNASDAQ collection looks something like this...
+var pricesNASDAQ = [
+	// ... from the NASDAQ's opening day
+	{name: "ANGI", price: 31.22, timeStamp: new Date(2011,11,15) },
+	{name: "MSFT", price: 32.32, timeStamp: new Date(2011,11,15) },
+	{name: "GOOG", price: 150.43, timeStamp: new Date(2011,11,15)},
+	{name: "ANGI", price: 28.44, timeStamp: new Date(2011,11,16)},
+	{name: "GOOG", price: 199.33, timeStamp: new Date(2011,11,16)},
+	// ...and up to the present.
+];
+		
+
+1
+
+function(pricesNASDAQ, printRecord) {
+
+2
+
+  var microsoftPrices,
+
+3
+
+    now = new Date(),
+
+4
+
+    tenDaysAgo = new Date( now.getFullYear(), now.getMonth(), now.getDate() - 10);
+
+5
+
+​
+
+6
+
+  // use filter() to filter the trades for MSFT prices recorded any time after 10 days ago
+
+7
+
+  microsoftPrices =
+
+8
+
+    pricesNASDAQ.
+
+9
+
+    filter(function(priceRecord) {   return priceRecord.name === 'MSFT'; });// finish this expression
+
+10
+
+​
+
+11
+
+  // Print the trades to the output console
+
+12
+
+  microsoftPrices.
+
+13
+
+    forEach(function(priceRecord) {
+
+14
+
+      printRecord(priceRecord);
+
+15
+
+    });
+
+16
+
+}
+
+17
+
+    
+
+Console
+MSFT 30.365 at Thu Oct 29 2015 19:38:23 GMT-0700 (Pacific Standard Time)
+MSFT 30.12 at Thu Oct 29 2015 19:38:27 GMT-0700 (Pacific Standard Time)
+MSFT 30.08 at Thu Oct 29 2015 19:38:29 GMT-0700 (Pacific Standard Time)
+MSFT 30.415 at Thu Oct 29 2015 19:38:30 GMT-0700 (Pacific Standard Time)
+MSFT 30.46 at Thu Oct 29 2015 19:38:31 GMT-0700 (Pacific Standard Time)
+MSFT 30.02 at Thu Oct 29 2015 19:38:35 GMT-0700 (Pacific Standard Time)
+MSFT 30.26 at Thu Oct 29 2015 19:38:44 GMT-0700 (Pacific Standard Time)
+MSFT 30.47 at Thu Oct 29 2015 19:38:45 GMT-0700 (Pacific Standard Time)
+MSFT 30.125 at Thu Oct 29 2015 19:38:47 GMT-0700 (Pacific Standard Time)
+MSFT 30.12 at Thu Oct 29 2015 19:38:48 GMT-0700 (Pacific Standard Time)
+MSFT 30.01 at Thu Oct 29 2015 19:38:53 GMT-0700 (Pacific Standard Time)
+MSFT 30.28 at Thu Oct 29 2015 19:38:55 GMT-0700 (Pacific Standard Time)
+MSFT 30.235 at Thu Oct 29 2015 19:38:59 GMT-0700 (Pacific Standard Time)
+MSFT 30.35 at Thu Oct 29 2015 19:39:01 GMT-0700 (Pacific Standard Time)
+MSFT 30.31 at Thu Oct 29 2015 19:39:02 GMT-0700 (Pacific Standard Time)
+MSFT 30.225 at Thu Oct 29 2015 19:39:04 GMT-0700 (Pacific Standard Time)
+MSFT 30.115 at Thu Oct 29 2015 19:39:07 GMT-0700 (Pacific Standard Time)
+MSFT 30.2 at Thu Oct 29 2015 19:39:18 GMT-0700 (Pacific Standard Time)
+MSFT 30.41 at Thu Oct 29 2015 19:39:22 GMT-0700 (Pacific Standard Time)
+MSFT 30.465 at Thu Oct 29 2015 19:39:26 GMT-0700 (Pacific Standard Time)
+MSFT 30.275 at Thu Oct 29 2015 19:39:27 GMT-0700 (Pacific Standard Time)
+MSFT 30.46 at Thu Oct 29 2015 19:39:35 GMT-0700 (Pacific Standard Time)
+MSFT 30.29 at Thu Oct 29 2015 19:39:37 GMT-0700 (Pacific Standard Time)
+MSFT 30.39 at Thu Oct 29 2015 19:39:41 GMT-0700 (Pacific Standard Time)
+MSFT 30.2 at Thu Oct 29 2015 19:39:49 GMT-0700 (Pacific Standard Time)
+MSFT 30.455 at Thu Oct 29 2015 19:39:52 GMT-0700 (Pacific Standard Time)
+MSFT 30.105 at Thu Oct 29 2015 19:40:16 GMT-0700 (Pacific Standard Time)
+MSFT 30.455 at Thu Oct 29 2015 19:40:20 GMT-0700 (Pacific Standard Time)
+MSFT 30.265 at Thu Oct 29 2015 19:40:23 GMT-0700 (Pacific Standard Time)
+MSFT 30.48 at Thu Oct 29 2015 19:40:31 GMT-0700 (Pacific Standard Time)
+MSFT 30.355 at Thu Oct 29 2015 19:40:33 GMT-0700 (Pacific Standard Time)
+MSFT 30.185 at Thu Oct 29 2015 19:40:37 GMT-0700 (Pacific Standard Time)
+MSFT 30.115 at Thu Oct 29 2015 19:40:43 GMT-0700 (Pacific Standard Time)
+MSFT 30.015 at Thu Oct 29 2015 19:40:45 GMT-0700 (Pacific Standard Time)
+MSFT 30.045 at Thu Oct 29 2015 19:40:52 GMT-0700 (Pacific Standard Time)
+MSFT 30.32 at Thu Oct 29 2015 19:40:53 GMT-0700 (Pacific Standard Time)
+MSFT 30.005 at Thu Oct 29 2015 19:40:54 GMT-0700 (Pacific Standard Time)
+MSFT 30.38 at Thu Oct 29 2015 19:40:55 GMT-0700 (Pacific Standard Time)
+MSFT 30.155 at Thu Oct 29 2015 19:40:57 GMT-0700 (Pacific Standard Time)
+MSFT 30.02 at Thu Oct 29 2015 19:40:59 GMT-0700 (Pacific Standard Time)
+MSFT 30.04 at Thu Oct 29 2015 19:41:03 GMT-0700 (Pacific Standard Time)
+MSFT 30.31 at Thu Oct 29 2015 19:41:04 GMT-0700 (Pacific Standard Time)
+MSFT 30.315 at Thu Oct 29 2015 19:41:06 GMT-0700 (Pacific Standard Time)
+MSFT 30.02 at Thu Oct 29 2015 19:41:09 GMT-0700 (Pacific Standard Time)
+MSFT 30.03 at Thu Oct 29 2015 19:41:09 GMT-0700 (Pacific Standard Time)
+MSFT 30.43 at Thu Oct 29 2015 19:41:10 GMT-0700 (Pacific Standard Time)
+MSFT 30.49 at Thu Oct 29 2015 19:41:10 GMT-0700 (Pacific Standard Time)
+MSFT 30.095 at Thu Oct 29 2015 19:41:11 GMT-0700 (Pacific Standard Time)
+MSFT 30.255 at Thu Oct 29 2015 19:41:11 GMT-0700 (Pacific Standard Time)
+MSFT 30.445 at Thu Oct 29 2015 19:41:13 GMT-0700 (Pacific Standard Time)
+MSFT 30.21 at Thu Oct 29 2015 19:41:13 GMT-0700 (Pacific Standard Time)
+MSFT 30.12 at Thu Oct 29 2015 19:41:14 GMT-0700 (Pacific Standard Time)
+MSFT 30.435 at Thu Oct 29 2015 19:41:15 GMT-0700 (Pacific Standard Time)
+MSFT 30.48 at Thu Oct 29 2015 19:41:16 GMT-0700 (Pacific Standard Time)
+MSFT 30.385 at Thu Oct 29 2015 19:41:17 GMT-0700 (Pacific Standard Time)
+MSFT 30.165 at Thu Oct 29 2015 19:41:17 GMT-0700 (Pacific Standard Time)
+MSFT 30.48 at Thu Oct 29 2015 19:41:18 GMT-0700 (Pacific Standard Time)
+MSFT 30.305 at Thu Oct 29 2015 19:41:18 GMT-0700 (Pacific Standard Time)
+MSFT 30.49 at Thu Oct 29 2015 19:41:20 GMT-0700 (Pacific Standard Time)
+MSFT 30.01 at Thu Oct 29 2015 19:41:21 GMT-0700 (Pacific Standard Time)
+MSFT 30.43 at Thu Oct 29 2015 19:41:23 GMT-0700 (Pacific Standard Time)
+MSFT 30.325 at Thu Oct 29 2015 19:41:25 GMT-0700 (Pacific Standard Time)
+MSFT 30.085 at Thu Oct 29 2015 19:41:25 GMT-0700 (Pacific Standard Time)
+MSFT 30.45 at Thu Oct 29 2015 19:41:30 GMT-0700 (Pacific Standard Time)
+MSFT 30.26 at Thu Oct 29 2015 19:41:32 GMT-0700 (Pacific Standard Time)
+MSFT 30.12 at Thu Oct 29 2015 19:41:38 GMT-0700 (Pacific Standard Time)
+MSFT 30.465 at Thu Oct 29 2015 19:41:43 GMT-0700 (Pacific Standard Time)
+MSFT 30.45 at Thu Oct 29 2015 19:41:46 GMT-0700 (Pacific Standard Time)
+MSFT 30.475 at Thu Oct 29 2015 19:41:48 GMT-0700 (Pacific Standard Time)
+MSFT 30.41 at Thu Oct 29 2015 19:41:57 GMT-0700 (Pacific Standard Time)
+MSFT 30.455 at Thu Oct 29 2015 19:41:58 GMT-0700 (Pacific Standard Time)
+MSFT 30.38 at Thu Oct 29 2015 19:42:04 GMT-0700 (Pacific Standard Time)
+MSFT 30.06 at Thu Oct 29 2015 19:42:10 GMT-0700 (Pacific Standard Time)
+MSFT 30.22 at Thu Oct 29 2015 19:42:11 GMT-0700 (Pacific Standard Time)
+MSFT 30.42 at Thu Oct 29 2015 19:42:13 GMT-0700 (Pacific Standard Time)
+MSFT 30.055 at Thu Oct 29 2015 19:42:16 GMT-0700 (Pacific Standard Time)
+MSFT 30.45 at Thu Oct 29 2015 19:42:19 GMT-0700 (Pacific Standard Time)
+MSFT 30.455 at Thu Oct 29 2015 19:42:22 GMT-0700 (Pacific Standard Time)
+MSFT 30.095 at Thu Oct 29 2015 19:42:23 GMT-0700 (Pacific Standard Time)
+MSFT 30.03 at Thu Oct 29 2015 19:42:26 GMT-0700 (Pacific Standard Time)
+MSFT 30.155 at Thu Oct 29 2015 19:42:35 GMT-0700 (Pacific Standard Time)
+MSFT 30.035 at Thu Oct 29 2015 19:42:39 GMT-0700 (Pacific Standard Time)
+MSFT 30.14 at Thu Oct 29 2015 19:42:40 GMT-0700 (Pacific Standard Time)
+MSFT 30.265 at Thu Oct 29 2015 19:42:44 GMT-0700 (Pacific Standard Time)
+MSFT 30.45 at Thu Oct 29 2015 19:42:47 GMT-0700 (Pacific Standard Time)
+MSFT 30.315 at Thu Oct 29 2015 19:42:48 GMT-0700 (Pacific Standard Time)
+MSFT 30.355 at Thu Oct 29 2015 19:42:52 GMT-0700 (Pacific Standard Time)
+MSFT 30.065 at Thu Oct 29 2015 19:42:53 GMT-0700 (Pacific Standard Time)
+MSFT 30.415 at Thu Oct 29 2015 19:42:56 GMT-0700 (Pacific Standard Time)
+MSFT 30.405 at Thu Oct 29 2015 19:42:56 GMT-0700 (Pacific Standard Time)
+MSFT 30.02 at Thu Oct 29 2015 19:42:58 GMT-0700 (Pacific Standard Time)
+MSFT 30.255 at Thu Oct 29 2015 19:42:58 GMT-0700 (Pacific Standard Time)
+MSFT 30 at Thu Oct 29 2015 19:42:58 GMT-0700 (Pacific Standard Time)
+MSFT 30.23 at Thu Oct 29 2015 19:43:00 GMT-0700 (Pacific Standard Time)
+MSFT 30.37 at Thu Oct 29 2015 19:43:00 GMT-0700 (Pacific Standard Time)
+
+Notice that the console is changing over time. Now look at the time stamps on the stock prices. We're displaying stock prices sampled after we ran our program! How could our array have contained stock price records from the future? Did we accidentally rip a hole in the space-time continuum?
+
+The solution to the riddle is that pricesNASDAQ is not an array. Unlike an array, which can only store a snapshot of stock prices, this new type can react to changes and update over time.
+
+In the next section I'll reveal the inner workings of this magical type. You'll learn how you can use it to model everything from mouse events to asynchronous JSON requests. Finally I'll show you how you can query this type using the 5 query functions you already know. It's about time we gave this magical type a name...
+Working with Observables
+
+Microsoft's open-source Reactive Extensions library introduces a new collection type to Javascript: Observable. An Observable is a lot like an Event. Like an Event, an Observable is a sequence of values that a data producer pushes to the consumer. However unlike an Event, an Observable can signal to a listener that it has completed, and will send no more data.
+
+Observables can send data to consumers asynchronously. Unlike Array, there's no Javascript literal syntax for creating Observable sequences. However we can build a helper method that visually describes the contents of sequences as well as the times between each item's arrival. The seq function creates an Observable from an array of items, and adds a delay for every empty item encountered. Every ,,, adds up to a second.
+
+// An array of numbers 1,2,3
+var numbers123Array =      [1,2,3];
+
+// A sequence that returns 1, and then after 4 seconds returns 2,
+// and then after another second returns 3, and then completes.
+var numbers123Observable = seq([1,,,,,,,,,,,,2,,,3]);
+
+// Like Arrays, Observables can contain any object - even Arrays.
+var observableOfArrays = seq([ [1,2,3],,,,,,[4,5,6],,,,,,,,,,,[1,2] ]);
+			
+
+Observables are a sequence of values, delivered one after the other. Therefore it's possible that an Observable can go on sending data to a listener forever just like a mouse move event. To create a sequence that doesn't complete, you can add a trailing ,,, to the end of the items passed to seq().
+
+// The trailing ,,, ensures that the sequence will not complete.
+var mouseMovesObservable =
+	seq([ {x: 23, y: 55},,,,,,,{x: 44, y: 99},,,{x:55,y:99},,,{x: 54, y:543},,, ]);
+
+// No trailing ,,, indicates that sequence will complete.
+var numbers123Observable = seq([1,,,2,,,3]);
+			
+
+Querying Arrays only gives us a snapshot. By contrast, querying Observables allows us to create data sets that react and update as the system changes over time. This enables a very powerful type of programming known as reactive programming.
+
+Let's start off by contrasting Observable with Events...
+Exercise 28: Subscribing to an event
+
+You're probably used to thinking about events as a list of handlers stored in an object. In this example, we subscribe to a button click event and then unsubscribe the first time the button is clicked.
+1
+
+function(button) {
+
+2
+
+  // the button click handler
+
+3
+
+  var handler = function(ev) {
+
+4
+
+    // Unsubscribe from the button event.
+
+5
+
+    button.removeEventListener("click", handler);
+
+6
+
+​
+
+7
+
+    alert("Button was clicked. Unsubscribing from event.");
+
+8
+
+  };
+
+9
+
+​
+
+10
+
+  // add the button click handler
+
+11
+
+  button.addEventListener("click", handler);
+
+12
+
+}
+
+13
+
+    
+
+Ask yourself this question: How is subscribing to an event different than traversing an array? Both operations involve sending a listener a sequence of items by repeatedly invoking a function. So why can't we traverse Arrays and Events the same way?
+Exercise 29: Traversing an Event
+
+Subscribing to an Event and traversing an Array are fundamentally the same operation. The only difference is that Array traversal is synchronous and completes, and Event traversal is asynchronous and never completes. If we convert a button click Event to an Observable object, we can use forEach() to traverse the Event.
+1
+
+function(button) {
+
+2
+
+  var buttonClicks = Observable.fromEvent(button, "click");
+
+3
+
+​
+
+4
+
+  // In the case of an Observable, forEach returns a subscription object.
+
+5
+
+  var subscription =
+
+6
+
+    buttonClicks.
+
+7
+
+      forEach(function(clickEvent) {
+
+8
+
+        alert("Button was clicked. Stopping Traversal.");
+
+9
+
+​
+
+10
+
+        // Stop traversing the button clicks
+
+11
+
+        subscription.dispose();
+
+12
+
+      });
+
+13
+
+}
+
+14
+
+    
+
+Notice that Observable's forEach() function returns a Subscription object. Disposing of a Subscription object unsubscribes from the event and prevents memory leaks. Disposing of a subscription is the asynchronous equivalent of stopping half-way through a counting for loop.
+
+Disposing of a Subscription object is basically the same as calling removeEventListener(). On the surface, these two approaches to Event handling don't seem to be very different. Under the circumstances, why should we bother converting Events to Observables? The reason is that if we convert Events to Observable Objects, we can use powerful functions to transform them. In the next exercise we'll learn how we can use one such function to avoid dealing with Subscriptions in many cases...
+Exercise 30: Completing Sequences with take()
+
+Have you ever wished that you could listen for the next occurrence of an event and then immediately unsubscribe? For example, developers will often attach an event handler to window.onload, expecting that their event handler will only be called once.
+
+window.addEventListener(
+	"load",
+	function()
+		// do some work here, but expect this function will only be called once.
+	})
+		
+
+In instances such as this, it's good practice to unsubscribe from the event after it's fired. Failing to unsubscribe is a memory leak. Depending on the circumstances, memory leaks can seriously destablize your application and can be very difficult to track down. Unfortunately unsubscribing from an event after one occurrence can be cumbersome:
+
+var handler = function() {
+	// do some work here, then unsubscribe from the event
+	window.removeEventListener("load", handler)
+};
+window.addEventListener("load", handler);
+		
+
+Wouldn't it be nice if there was an easier way to code this? That's why Observable has a take() function. The take() function works like this...
+
+seq([1,,,2,,,3,,,4,,,5,,,6,,,]).take(3) === seq([1,,,2,,,3]);
+		
+
+An Observable based on an Event will never complete on its own. The take() function creates a new sequence that completes after a discrete number of items arrive. This is important, because unlike an Event, when an Observable sequence completes it unsubscribes all of its listeners. That means that if we use take() to complete our Event sequence, we don't need to unsubscribe!
+
+Let's repeat the previous exercise, in which we listened for a single button click and then unsubscribed. This time let's use the take() function to complete the sequence after the button is clicked.
+1
+
+function(button) {
+
+2
+
+  var buttonClicks = Observable.fromEvent(button, "click");
+
+3
+
+​
+
+4
+
+  // Use take() to listen for only one button click
+
+5
+
+  // and unsubscribe.
+
+6
+
+  buttonClicks.take(1).
+
+7
+
+    // Insert take() call here
+
+8
+
+    forEach(function(clickEvent) {
+
+9
+
+      alert("Button was clicked once. Stopping Traversal.");
+
+10
+
+    });
+
+11
+
+}
+
+12
+
+    
+
+The take() function is great way of listening for a discrete number of events and then unsubscribing, but Observable has an even more flexible function that we can use to complete sequences...
+Exercise 31: Completing sequences with takeUntil()
+
+Have you ever wanted to unsubscribe from one Event when another Event fires? Observable's takeUntil() function is a convenient way of completing a sequence when another Event occurs. Here's how takeUntil() works:
+
+var numbersUntilStopButtonPressed =
+	seq(              [ 1,,,2,,,3,,,4,,,5,,,6,,,7,,,8,,,9,,, ]).
+		takeUntil(seq([  ,,, {eventType: "click"},,, ]) )                    === seq([ 1,,,2 ])
+		
+
+Earlier we (unknowningly) built a dynamic Microsoft price stock ticker using Observable. The problem with that stock ticker was that it kept going on forever. If left unchecked, all the entries in the log could use up all of the memory on the page. In the exercise below, filter the Observable sequence of NASDAQ prices for MSFT stock prices, use the fromEvent() function to create an Observable .
+
+1
+
+function(pricesNASDAQ, printRecord, stopButton) {
+
+2
+
+  var stopButtonClicks = Observable.fromEvent(stopButton,"click"),
+
+3
+
+    microsoftPrices =
+
+4
+
+      pricesNASDAQ.
+
+5
+
+        filter(function(priceRecord) {
+
+6
+
+          return priceRecord.name === "MSFT";
+
+7
+
+        }).
+
+8
+
+        takeUntil(stopButtonClicks);
+
+9
+
+​
+
+10
+
+  microsoftPrices.
+
+11
+
+    forEach(function(priceRecord) {
+
+12
+
+      printRecord(priceRecord);
+
+13
+
+    });
+
+14
+
+}
+
+15
+
+    
+
+<-Press this button to complete the sequence of microsoft stock prices.
+
+Console
+MSFT 30.405 at Thu Oct 29 2015 17:12:00 GMT-0700 (Pacific Standard Time)
+MSFT 30.325 at Thu Oct 29 2015 17:12:01 GMT-0700 (Pacific Standard Time)
+MSFT 30.22 at Thu Oct 29 2015 17:12:02 GMT-0700 (Pacific Standard Time)
+MSFT 30.15 at Thu Oct 29 2015 17:12:04 GMT-0700 (Pacific Standard Time)
+MSFT 30.38 at Thu Oct 29 2015 17:12:05 GMT-0700 (Pacific Standard Time)
+MSFT 30.1 at Thu Oct 29 2015 17:12:07 GMT-0700 (Pacific Standard Time)
+MSFT 30.22 at Thu Oct 29 2015 17:12:09 GMT-0700 (Pacific Standard Time)
+MSFT 30.09 at Thu Oct 29 2015 17:12:10 GMT-0700 (Pacific Standard Time)
+MSFT 30.01 at Thu Oct 29 2015 17:12:10 GMT-0700 (Pacific Standard Time)
+MSFT 30.09 at Thu Oct 29 2015 17:12:12 GMT-0700 (Pacific Standard Time)
+MSFT 30.365 at Thu Oct 29 2015 17:12:12 GMT-0700 (Pacific Standard Time)
+MSFT 30.33 at Thu Oct 29 2015 17:12:13 GMT-0700 (Pacific Standard Time)
+
+We've learned that Observable sequences are much more powerful than raw events, because they can complete. The take() and takeUntil() functions are powerful enough to ensure that we never have to unsubscribe from another event again! This reduces the risk of memory leaks and makes our code more readable.
+
+Here's what we learned in this section:
+
+    We can traverse Observables using forEach().
+    We can use fromEvent() to convert Events into Observables that never complete.
+    We can apply take() and takeUntil() to an Observable to create a new sequence which does complete.
+
+In the next section we'll learn how to combine events to create more complex events. You'll be suprised how easily you can solve complex, asynchronous problems!
+Querying Observables
+
+What's the difference between these two tasks?
+
+    Creating a flat list of movies with a rating of 5.0 from a bunch of movie lists.
+    Creating a sequence of all the mouse drag events from the mouseDown, mouseMove, and mouseUp events.
+
+You might think of them as different, and might code them very differently, but these tasks are fundamentally the same. Both of these tasks are queries, and can be solved using the functions you've learned in these exercises.
+
+The difference between traversing an Array and traversing an Observable is the direction in which the data moves. When traversing an Array, the client pulls data from the data source, blocking until it gets a result. When traversing Observables, the data source pushes data at the client whenever it arrives.
+
+It turns out that the direction in which data moves is orthogonal to querying that data. In other words, when we're querying data it doesn't matter whether we pull data, or data is pushed at us. In either case the query methods make the same transformations. The only thing that changes is the input and output type respectively. If we filter an Array, we get a new Array. If we filter an Observable, we get a new Observable, and so on.
+
+Take a look at how the query methods transform Observables and Arrays:
+
+// map()
+
+[1,2,3].map(function(x) { return x + 1 })                       === [2,3,4]
+seq([1,,,2,,,3]).map(function(x) { return x + 1})               === seq([2,,,3,,,4])
+seq([1,,,2,,,3,,,]).map(function(x) { return x + 1 })           === seq([2,,,3,,,4,,,])
+
+// filter()
+
+[1,2,3].filter(function(x) { return x > 1; })                   === [2,3]
+seq([1,,,2,,,3]).filter(function(x) { return x > 1; })          === seq([2,,,3])
+seq([1,,,2,,,3,,,]).filter(function(x) { return x > 1; })       === seq([2,,,3,,,])
+
+// concatAll()
+
+[ [1, 2, 3], [4, 5, 6] ].concatAll()                             === [1,2,3,4,5,6]
+seq([ seq([1,,,2,,,3]),,,seq([4,,,5,,,6]) ]).concatAll()         === seq([1,,,2,,,3,,,4,,,5,,,6])
+
+// If a new sequence arrives before all the items
+// from the previous sequence have arrived, no attempt
+// to retrieve the new sequence's elements is made until
+// the previous sequence has completed. As a result the
+// order of elements in the sequence is preserved.
+seq([
+	seq([1,,,, ,2, ,3])
+	,,,seq([,,4, ,5, ,,6]) ]).
+	concatAll()                                                  === seq([1,,,,,2,,3,,4,,5,,,6])
+
+// Notice that as long as at least one sequence being
+// concatenated is incomplete, the concatenated sequence is also
+// incomplete.
+seq([
+	seq([1,, ,,, ,,,2,,,3])
+	,,,seq([4,,,5,,, ,,, ,,6,,,]) ]).
+	concatAll()                                                  === seq([1,,,4,,,5,,,2,,,3,,,6,,,])
+
+// reduce()
+
+[ 1, 2, 3 ].reduce(sumFunction)                                 === [ 6 ]
+seq([ 1,,,2,,,3 ]).reduce(sumFunction)                          === seq([,,,,,,6])
+
+// Reduced sequences do not complete until the
+// sequence does.
+seq([ 1,,,2,,,3,,, ]).reduce(sumFunction)                       === seq([ ,,,,,,,,,])
+
+// zip()
+
+// In both Arrays and Observables, the zipped sequence
+// completes as soon as either the left or right-hand
+// side sequence completes.
+Array.zip([1,2],[3,4,5], sumFunction)                           === [4,6]
+Observable.zip(seq([1,,,2]),seq([3,,,4,,,5]), sumFunction)      === seq([4,,,6])
+
+// take()
+[1,2,3].take(2)                                                 === [1, 2]
+seq([ 1,,,2,,,3 ]).take(2)                                      === seq([ 1,,,2 ])
+seq([ 1,,,2,,,3,,, ]).take(2)                                   === seq([ 1,,,2 ])
+
+// takeUntil()
+
+// takeUntil works for Arrays, but it's not very useful
+// because the result will always be an empty array.
+[1,2,3].takeUntil([1])                                          === []
+
+seq([1,,,2,,,3,,, ]).takeUntil(
+seq([ ,,, ,,4 , }))                                             === seq([ 1,,,2 ])
+
+			
+
+Remember when I prohibited the use of array indexers? The reason for that restriction should now become clearer to you. Whereas the 5 functions can be used on any collection, indexers can only be used on collections that support random-access (like Array). If you avoid indexers and stick to the functions you've learned in this tutorial, you'll have a unified programming model for transforming any collection. Having a unified programming model makes it trivial to convert synchronous code to asynchronous code, a process which would otherwise be very difficult. As we've demonstrated, you don't need indexers to perform complex collection transformations.
+
+Now that we've seen that we can query asychronous and synchronous data sources using the same programming model, let's use Observable and our query functions to create complex new events.
+Exercise 32: Creating a mouse drag event
+
+Remember the exercise we solved earlier? The one in which we retrieved all the movies with a rating of 5.0 from an array of movie lists? If we were to describe the solution in pseudocode it might read something like this...
+
+"For every movie list, retrieve only those videos with a rating of 5.0"
+
+var moviesWithHighRatings =
+	movieLists.
+		concatMap(function(movieList) {
+			return movieList.videos.
+				filter(function(video) {
+					return video.rating === 5.0;
+				});
+		});
+		
+
+Now we're going to create a mouseDrag event for a DOM object. If we were to describe this problem as pseudocode it might read something like this...
+
+"For every movie list mouse down event on the sprite, retrieve only those videos with a rating of 5.0 mouse move events that occur before the next mouse up event."
+
+1
+
+function(sprite, spriteContainer) {
+
+2
+
+  var spriteMouseDowns = Observable.fromEvent(sprite, "mousedown"),
+
+3
+
+    spriteContainerMouseMoves = Observable.fromEvent(spriteContainer, "mousemove"),
+
+4
+
+    spriteContainerMouseUps = Observable.fromEvent(spriteContainer, "mouseup"),
+
+5
+
+      spriteMouseDrags = Observable.fromEvent(sprite, "mousedrag");
+
+6
+
+      // For every mouse down event on the sprite...
+
+7
+
+     spriteMouseDowns.concatMap(function(events){ return 
+
+8
+
+       spriteContainerMouseMoves.
+
+9
+
+            takeUntil(spriteContainerMouseUps);      
+
+10
+
+      });
+
+11
+
+  
+
+12
+
+​
+
+13
+
+        // --------------------------------------------------------
+
+14
+
+        //            INSERT CODE HERE
+
+15
+
+        // --------------------------------------------------------
+
+16
+
+        // Complete this expression...
+
+17
+
+        // For every mouse down event, return the mouse move event
+
+18
+
+        // sequence until a mouse up event occurs.
+
+19
+
+​
+
+20
+
+  // For each mouse drag event, move the sprite to the absolute page position.
+
+21
+
+  spriteMouseDrags.forEach(function(dragPoint) {
+
+22
+
+    sprite.style.left = dragPoint.pageX + "px";
+
+23
+
+    sprite.style.top = dragPoint.pageY + "px";
+
+24
+
+  });
+
+25
+
+}
+
+26
+
+    
+
+Sprite Sprite Container
+
+Now we're really cooking. We just created a complex event with a few lines of code. We didn't have to deal with any subscriptions objects, or write any stateful code whatsoever. Let's try something a little harder.
+Exercise 33: Improving our mouse drag event
+
+Our mouse drag event is a little too simple. Notice that when we drag around the sprite, it always positions itself at the top-left corner of the mouse. Ideally we'd like our drag event to offset its coordinates, based on where the mouse was when the mouse down event occurred. This will make our mouse drag more closely resemble moving a real object with our finger.
+
+Let's see if you can adjust the coordinates in the mouse drag event, based on the mousedown location on the sprite. The mouse events are sequences, and they look something like this:
+
+spriteContainerMouseMoves =
+	seq([ {x: 200, y: 400, offsetX: 10, offsetY: 15},,,{x: 210, y: 410, offsetX: 20, offsetY: 26},,, ])
+		
+
+Each item in the mouse event sequences contains an x, y value that represents that absolute location of the mouse event on the page. The moveSprite() function uses these coordinates to position the sprite. Each item in the sequence also contains a pair of offsetX and offsetY properties that indicate the position of the mouse event relative to the event target.
+1
+
+function(sprite, spriteContainer) {
+
+2
+
+  // All of the mouse event sequences look like this:
+
+3
+
+  // seq([ {pageX: 22, pageY: 3423, offsetX: 14, offsetY: 22} ,,, ])
+
+4
+
+  var spriteMouseDowns = Observable.fromEvent(sprite, "mousedown"),
+
+5
+
+    spriteContainerMouseMoves = Observable.fromEvent(spriteContainer, "mousemove"),
+
+6
+
+    spriteContainerMouseUps = Observable.fromEvent(spriteContainer, "mouseup"),
+
+7
+
+    // Create a sequence that looks like this:
+
+8
+
+    // seq([ {pageX: 22, pageY:4080 },,,{pageX: 24, pageY: 4082},,, ])
+
+9
+
+    spriteMouseDrags =
+
+10
+
+      // For every mouse down event on the sprite...
+
+11
+
+      spriteMouseDowns.
+
+12
+
+        concatMap(function(contactPoint) {
+
+13
+
+          // ...retrieve all the mouse move events on the sprite container...
+
+14
+
+          return spriteContainerMouseMoves.
+
+15
+
+            // ...until a mouse up event occurs.
+
+16
+
+            takeUntil(spriteContainerMouseUps).
+
+17
+
+            map(function(movePoint) {
+
+18
+
+              return {
+
+19
+
+                pageX: movePoint.pageX - contactPoint.offsetX,
+
+20
+
+                pageY: movePoint.pageY - contactPoint.offsetY
+
+21
+
+              };
+
+22
+
+            });
+
+23
+
+        });
+
+24
+
+​
+
+25
+
+  // For each mouse drag event, move the sprite to the absolute page position.
+
+26
+
+  spriteMouseDrags.forEach(function(dragPoint) {
+
+27
+
+    sprite.style.left = dragPoint.pageX + "px";
+
+28
+
+    sprite.style.top = dragPoint.pageY + "px";
+
+29
+
+  });
+
+30
+
+}
+
+31
+
+        
+
+Sprite Sprite Container
+Exercise 34: HTTP requests
+
+Events aren't the only source of asynchronous data in an application. There's also HTTP requests. Most of the time HTTP requests are exposed via a callback-based API. To receive data asynchronously from a callback-based API, the client typically passes a success and error handler to the function. When the asynchronous operation completes, the appropriate handler is called with the data. In this exercise we'll use jQuery's getJSON api to asynchronously retrieve data.
+1
+
+function($) {
+
+2
+
+  $.getJSON(
+
+3
+
+    "http://api-global.netflix.com/queue",
+
+4
+
+    {
+
+5
+
+      success: function(json) {
+
+6
+
+        alert("Data has arrived.");
+
+7
+
+      },
+
+8
+
+      error: function(ex) {
+
+9
+
+        alert("There was an error.")
+
+10
+
+      }
+
+11
+
+    });
+
+12
+
+}
+
+13
+
+    
+
+Exercise 35: Sequencing HTTP requests with callbacks
+
+Let's say that we're writing the startup flow for a web application. On startup, the application must perform the following operations:
+
+    Download the URL prefix to use for all subsequent AJAX calls. This URL prefix will vary based on what AB test the user is enrolled in.
+    Use the url prefix to do the following actions in parallel:
+        Retrieve a movie list array
+        Retrieve configuration information and...
+            make a follow up call for an instant queue list if the config property "showInstantQueue" is truthy
+    If an instant queue list was retrieved, append it to the end of movie list.
+    If all operations were successful then display the movie lists after the window loads. Otherwise inform the user that there was a connectivity error.
+
+1
+
+function(window, $, showMovieLists, showError) {
+
+2
+
+  var error,
+
+3
+
+    configDone,
+
+4
+
+    movieLists,
+
+5
+
+    queueList,
+
+6
+
+    windowLoaded,
+
+7
+
+    outputDisplayed,
+
+8
+
+    errorHandler = function() {
+
+9
+
+      // Otherwise show the error.
+
+10
+
+      error = "There was a connectivity error";
+
+11
+
+​
+
+12
+
+      // We may be ready to display out
+
+13
+
+      tryToDisplayOutput();
+
+14
+
+    },
+
+15
+
+    tryToDisplayOutput = function() {
+
+16
+
+      if (outputDisplayed) {
+
+17
+
+        return;
+
+18
+
+      }
+
+19
+
+      if (windowLoaded) {
+
+20
+
+        if (configDone && movieLists !== undefined) {
+
+21
+
+          if (queueList !== undefined) {
+
+22
+
+            movieLists.push(queueList);
+
+23
+
+          }
+
+24
+
+          outputDisplayed = true;
+
+25
+
+          showMovieLists(JSON.stringify(movieLists));
+
+26
+
+        }
+
+27
+
+        else if (error) {
+
+28
+
+          outputDisplayed = true;
+
+29
+
+          showError(error);
+
+30
+
+        }
+
+31
+
+      }
+
+32
+
+    },
+
+33
+
+    windowLoadHandler = function() {
+
+34
+
+      windowLoaded = true;
+
+35
+
+​
+
+36
+
+      // Remember to unsubscribe from events
+
+37
+
+      window.removeEventListener("load", windowLoadHandler);
+
+38
+
+​
+
+39
+
+      // This may be the last task we're waiting on, so try and display output.
+
+40
+
+      tryToDisplayOutput();
+
+41
+
+    };
+
+42
+
+​
+
+43
+
+  // Register for the load event
+
+44
+
+  window.addEventListener("load", windowLoadHandler);
+
+45
+
+​
+
+46
+
+  // Request the service url prefix for the users AB test
+
+47
+
+  $.getJSON(
+
+48
+
+    "http://api-global.netflix.com/abTestInformation",
+
+49
+
+    {
+
+50
+
+      success: function(abTestInformation) {
+
+51
+
+        // Request the member's config information to determine whether their instant
+
+52
+
+        // queue should be displayed.
+
+53
+
+        $.getJSON(
+
+54
+
+          "http://api-global.netflix.com/" + abTestInformation.urlPrefix + "/config",
+
+55
+
+          {
+
+56
+
+            success: function(config) {
+
+57
+
+              // Parallel retrieval of movie list could've failed,
+
+58
+
+              // in which case we don't want to issue this call.
+
+It's fair to say that sequencing HTTP requests with callbacks is very hard. In order to perform two tasks in parallel, we have to introduce a variable to track the status of each task. Every time one of the parallel tasks completes it must check whether its sibling task has also completed. If both have completed, only then can we move forward. In the example above, every time a task is finished the tryToDisplayOutput() function is called to check if the program was ready to display output. This function checks the status of all tasks and displays the output if possible.
+
+With a callback-based API, asynchronous error handling is also very complicated. In synchronous programs, a unit of work is cancelled when an exception is thrown. By contrast, in our program we had to explicitly track whether an error occurred in parallel to prevent an unnecessary call for the instant queue. Javascript provides us with special support for synchronous error handling with the keywords try/catch/throw. Unfortunately no such support is available for asynchronous programs.
+
+The Observable interface is a much more powerful way of working with asynchronous APIs than callbacks. We'll see that Observables can free us from having to track the status of tasks that are run in parallel, just Observables frees us from having to track Event Subscriptions. We'll also see that Observable gives us the same error propagation semantics in asynchronous programs that we expect in synchronous programs. Finally we'll learn that by converting callback-based APIs to Observables, we can query them along with Events to build much more expressive programs.
+Exercise 36: Traversing callback-based Asynchronous APIs
+
+If a callback API were a sequence, what kind of sequence would it be? We've seen that UI Event sequences can contain anywhere from 0 to infinite items, but will never complete on their own.
+
+mouseMoves === seq([ {x: 23, y: 55},,,,,,,{x: 44, y: 99},,,{x:55,y:99},,,{x: 54, y:543},,, ]);
+		
+
+In contrast, if we were to convert output from the $.getJSON() function we've been using into a sequence it would always return a sequence that completes after sending a single item.
+
+getJSONAsObservable("http://api-global.netflix.com/abTestInformation") ===
+	seq([ { urlPrefix: "billboardTest" } ])
+		
+
+It might seem strange to create sequences that contain only one object. We could introduce an Observable-like type specifically for scalar values, but that would make callback-based APIs more difficult to query with Events. Thankfully, an Observable sequence is flexible enough to model both.
+
+So how do we convert a callback API into an Observable sequence? Unfortunately, because callback-based APIs vary so much in their interfaces, we can't create a conversion function like we did with fromEvent(). However there is a more flexible function we can use to build Observable sequences...
+
+Observable.create() is powerful enough to convert any asynchronous API into an Observable. Observable.create() relies on the fact that all asynchronous APIs have the following semantics:
+
+    The client needs to be able to receive data.
+    The client needs to be able to receive error information.
+    The client needs to be able to be alerted that the operation is complete.
+    The client needs to be able to indicate that they're no longer interested in the result of the operation.
+
+In the following example, we'll use the Observable.create() function to create an Observable that issues a request to getJSON when it's traversed.
+
+1
+
+function(window, $) {
+
+2
+
+  var getJSON = function(url) {
+
+3
+
+    return Observable.create(function(observer) {
+
+4
+
+      var subscribed = true;
+
+5
+
+​
+
+6
+
+      $.getJSON(url,
+
+7
+
+        {
+
+8
+
+          success:
+
+9
+
+            function(data) {
+
+10
+
+              // If client is still interested in the results, send them.
+
+11
+
+              if (subscribed) {
+
+12
+
+                // Send data to the client
+
+13
+
+                observer.onNext(data);
+
+14
+
+                // Immediately complete the sequence
+
+15
+
+                observer.onCompleted();
+
+16
+
+              }
+
+17
+
+            },
+
+18
+
+          error: function(ex) {
+
+19
+
+            // If client is still interested in the results, send them.
+
+20
+
+            if (subscribed) {
+
+21
+
+              // Inform the client that an error occurred.
+
+22
+
+              observer.onError(ex);
+
+23
+
+            }
+
+24
+
+          }
+
+25
+
+        });
+
+26
+
+​
+
+27
+
+      // Definition of the Subscription objects dispose() method.
+
+28
+
+      return function() {
+
+29
+
+        subscribed = false;
+
+30
+
+      }
+
+31
+
+    });
+
+32
+
+  };
+
+33
+
+​
+
+34
+
+  var subscription =
+
+35
+
+    getJSON("http://api-global.netflix.com/abTestInformation").
+
+36
+
+      forEach(
+
+37
+
+        // observer.onNext()
+
+38
+
+        function(data) {
+
+39
+
+          alert(JSON.stringify(data));
+
+40
+
+        },
+
+41
+
+        // observer.onError()
+
+42
+
+        function(err) {
+
+43
+
+          alert(err)
+
+44
+
+        },
+
+45
+
+        // observer.onCompleted()
+
+46
+
+        function() {
+
+47
+
+          alert("The asynchronous operation has completed.")
+
+48
+
+        });
+
+49
+
+}
+
+50
+
+    
+
+Understand that the function passed to Observable.create() is the definition of the forEach() function for this Observable. In other words, all we have to do to define an Observable is to define its traversal function. Notice that although we pass three functions to the Observable's forEach() function, the function we pass to Observable.create() accepts only one value: an Observer. An Observer is just a triple containing three handlers:
+
+    The onNext() handler used to send data to the client.
+    The onError() handler used to send error information to the client.
+    The onCompleted() handler used to inform the client that the sequence has completed.
+
+The three handlers we pass to forEach() are packaged together into a single Observer object for convenience. Finally Observable.create() returns a function that defines the dispose() method of the Subscription object during Traversal. Like the Observer, the Observable.create() function creates the Subscription object for us and uses our function as the dispose() definition.
+
+Now that we've built a version of the getJSON function that returns an Observable sequence, let's use it to improve our solution to the previous exercise...
+Exercise 37: Sequencing HTTP requests with Observable
+
+Let's use the getJSON function that returns Observables, and the Observable.fromEvent() to complete the exercise we completed earlier.
+1
+
+function(window, getJSON, showMovieLists, showError) {
+
+2
+
+  var movieListsSequence =
+
+3
+
+    Observable.zip(
+
+4
+
+      getJSON("http://api-global.netflix.com/abTestInformation").
+
+5
+
+        concatMap(function(abTestInformation) {
+
+6
+
+          return Observable.zip(
+
+7
+
+            getJSON("http://api-global.netflix.com/" + abTestInformation.urlPrefix + "/config").
+
+8
+
+              concatMap(function(config) {
+
+9
+
+                if (config.showInstantQueue) {
+
+10
+
+                  return getJSON("http://api-global.netflix.com/" + abTestInformation.urlPrefix + "/queue").
+
+11
+
+                    map(function(queueMessage) {
+
+12
+
+                      return queueMessage.list;
+
+13
+
+                    });
+
+14
+
+                }
+
+15
+
+                else {
+
+16
+
+                  return Observable.returnValue(undefined);
+
+17
+
+                }
+
+18
+
+              }),
+
+19
+
+            getJSON("http://api-global.netflix.com/" + abTestInformation.urlPrefix + "/movieLists"),
+
+20
+
+            function(queue, movieListsMessage) {
+
+21
+
+              var copyOfMovieLists = Object.create(movieListsMessage.list);
+
+22
+
+              if (queue !== undefined) {
+
+23
+
+                copyOfMovieLists.push(queue);
+
+24
+
+              }
+
+25
+
+​
+
+26
+
+              return copyOfMovieLists;
+
+27
+
+            });
+
+28
+
+        }),
+
+29
+
+      Observable.fromEvent(window, "load"),
+
+30
+
+      function(movieLists, loadEvent) {
+
+31
+
+        return movieLists;
+
+32
+
+      });
+
+33
+
+​
+
+34
+
+  movieListsSequence.
+
+35
+
+    forEach(
+
+36
+
+      function(movieLists) {
+
+37
+
+        showMovieLists(movieLists);
+
+38
+
+      },
+
+39
+
+      function(err) {
+
+40
+
+        showError(err);
+
+41
+
+      });
+
+42
+
+}
+
+43
+
+    
+
+Almost every workflow in a web application starts with an event, continues with an HTTP request, and results in a state change. Now we know how to express the first two tasks elegantly.
+Exercise 38: Throttle Input
+
+When dealing with user input, there will be times when the user's input is too noisy, and will potentially clog your servers with extraneous requests. We want the ability to throttle the users's input so that if they interacting for one second, then we will get the user input. Let's say for example, the user clicks a button once too many times upon saving and we only want to fire after they've stopped for a second.
+
+seq([1,2,3,,,,,,,4,5,6,,,]).throttle(1000 /* ms */) === seq([,,,,,,,3,,,,,,,,,,6,,,]);
+		
+
+1
+
+function (clicks, saveData, name) {
+
+2
+
+  return clicks.
+
+3
+
+    throttle(1000).
+
+4
+
+    concatMap(function () {
+
+5
+
+      return saveData(name);
+
+6
+
+    })
+
+7
+
+}
+
+8
+
+        
+
+Name
+<<-- Click this to save your data
+
+Now that we know how to throttle input, let's take a look at another problem where throttling data is important...
+Exercise 39: Autocomplete Box
+
+One of the most common problems in web development is the autocomplete box. This seems like it should be an easy problem, but is actually quite challenging. For example, how do we throttle the input? How do we make sure we're not getting out of order requests coming back? For example if I type "react" then type "reactive" I want "reactive" to be my result, regardless of which actually returned first from the service.
+
+In the example below, you will be receiving a sequence of key presses, a textbox, and a function when called returns an array of search results.
+
+getSearchResultSet('react') === seq[,,,["reactive", "reaction","reactor"]]
+keyPresses === seq['r',,,,,'e',,,,,,'a',,,,'c',,,,'t',,,,,]
+		
+
+1
+
+function (getSearchResultSet, keyPresses, textBox) {
+
+2
+
+​
+
+3
+
+  var getSearchResultSets =
+
+4
+
+    keyPresses.
+
+5
+
+      map(function () {
+
+6
+
+        return textBox.value;
+
+7
+
+      }).
+
+8
+
+      throttle(1000).
+
+9
+
+      concatMap(function (text) {
+
+10
+
+        return getSearchResultSet(text).takeUntil(keyPresses);
+
+11
+
+      });
+
+12
+
+​
+
+13
+
+  return getSearchResultSets;
+
+14
+
+}
+
+15
+
+        
+
+Name
+
+Now that we're able to query with our throttled input, you'll still notice one slight problem. If you hit your arrow keys or any other non character key, the request will still fire. How do we prevent that?
+Exercise 40: Distinct Until Changed Input
+
+You'll notice in the previous exercise that if you pressed your arrow keys while inside the textbox, the query will still fire, regardless of whether the text actually changed or not. How do we prevent that? The distinctUntilChanged filters out successive repetitive values.
+
+seq([1,,,1,,,3,,,3,,,5,,,1,,,]).distinctUntilChanged() ===
+seq([1,,,,,,,3,,,,,,,5,,,1,,,]);
+		
+
+1
+
+function (keyPresses, isAlpha) {
+
+2
+
+​
+
+3
+
+  return keyPresses.
+
+4
+
+    map(function (e) { return String.fromCharCode(e.keyCode); }).
+
+5
+
+    filter(function (character) { return isAlpha(character); }).
+
+6
+
+    distinctUntilChanged().
+
+7
+
+    scan('', function (stringSoFar, character) {
+
+8
+
+      return stringSoFar + character;
+
+9
+
+    });
+
+10
+
+}
+
+11
+
+        
+
+Enter Keys
+Keys filtered by distinctUntilChanged:
+
+Now that we know how to get only the distinct input, let's see how it applies to our autocomplete example...
+Exercise 41: Autocomplete Box Part 2: Electric Boogaloo
+
+In the previous version of the autocomplete box, there were two bugs
+
+    Multiple successive searches are made for the same string
+    Attempts are made to retrieve results for an empty string.
+
+The example below is the same as above, but this time, fix the bugs!
+
+getSearchResultSet('react') === seq[,,,["reactive", "reaction","reactor"]]
+keyPresses === seq['r',,,,,'e',,,,,,'a',,,,'c',,,,'t',,,,,]
+		
+
+1
+
+function (getSearchResultSet, keyPresses, textBox) {
+
+2
+
+​
+
+3
+
+  var getSearchResultSets =
+
+4
+
+    keyPresses.
+
+5
+
+      map(function () {
+
+6
+
+        return textBox.value;
+
+7
+
+      }).
+
+8
+
+      throttle(1000).
+
+9
+
+      distinctUntilChanged().
+
+10
+
+      filter(function (s) { return s.length > 0; }).
+
+11
+
+      concatMap(function (text) {
+
+12
+
+        return getSearchResultSet(text).takeUntil(keyPresses);
+
+13
+
+      });
+
+14
+
+​
+
+15
+
+  return getSearchResultSets;
+
+16
+
+}
+
+17
+
+        
+
+Name
+
+With just this little amount of code, we're able to produce a fully functioning autocomplete scenario. But there are other outstanding questions, such as error handling. How can we handle failure and retry if necessary?
+Exercise 42: Retrying after errors
+
+You'll notice in the previous exercise that if you pressed your arrow keys while inside the textbox, the query will still fire, regardless of whether the text actually changed or not. How do we prevent that? The distinctUntilChanged filters out successive repetitive values.
+
+seq([1,,,1,,,3,,,3,,,5,,,1,,,]).distinctUntilChanged() ===
+seq([1,,,,,,,3,,,,,,,5,,,1,,,]);
+		
+
+1
+
+function (keyPresses, isAlpha) {
+
+2
+
+​
+
+3
+
+  return keyPresses.
+
+4
+
+    map(function (e) { return String.fromCharCode(e.keyCode); }).
+
+5
+
+    filter(function (character) { return isAlpha(character); }).
+
+6
+
+    distinctUntilChanged().
+
+7
+
+    scan('', function (stringSoFar, character) {
+
+8
+
+      return stringSoFar + character;
+
+9
+
+    });
+
+10
+
+}
+
+11
+
+        
+
+Enter Keys
+Keys filtered by distinctUntilChanged
+
+Now that we know how to get only the distinct input, let's see how it applies to our autocomplete example...
+A Work in Progress
+
+Congratulations! You've made it this far, but you're not done. Learning is an on-going process. Go out and start using the functions you've learned in your day-to-day coding. Over time, I'll be adding more exercises to this tutorial. If you have suggestions for more exercises, send me a pull request!
